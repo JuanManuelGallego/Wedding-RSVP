@@ -42,7 +42,7 @@ export default function ImportGuestsForm() {
   return (
     <div className="import-guests">
       <label className="import-label" htmlFor="csvFile">
-        Upload CSV (columns: <code>name, party_size</code>)
+        Upload CSV (columns: <code>name, party_size, whatsapp</code>)
       </label>
       <input
         id="csvFile"

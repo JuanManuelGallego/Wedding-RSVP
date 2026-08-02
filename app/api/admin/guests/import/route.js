@@ -75,6 +75,7 @@ export async function POST(request) {
     const name = (r[0] || '').trim();
     const partyRaw = (r[1] || '').trim();
     const partySize = partyRaw ? parseInt(partyRaw, 10) : 1;
+    const whatsapp = (r[2] || '').trim() || null;
 
     if (!name) {
       skipped.push({ row: r, reason: 'Missing name' });
@@ -88,6 +89,7 @@ export async function POST(request) {
     toInsert.push({
       display_name: name,
       party_size: partySize || 1,
+      whatsapp,
       slug: makeSlug(name),
     });
   }

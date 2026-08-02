@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 export default function AddGuestForm() {
   const [name, setName] = useState('');
   const [partySize, setPartySize] = useState(1);
+  const [whatsapp, setWhatsapp] = useState('');
   const [status, setStatus] = useState('idle'); // idle | submitting | error
   const [link, setLink] = useState('');
   const router = useRouter();
@@ -18,7 +19,11 @@ export default function AddGuestForm() {
     const res = await fetch('/api/admin/guests', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ display_name: name, party_size: partySize }),
+      body: JSON.stringify({
+        display_name: name,
+        party_size: partySize,
+        whatsapp,
+      }),
     });
 
     const body = await res.json().catch(() => ({}));
@@ -31,6 +36,7 @@ export default function AddGuestForm() {
     setStatus('idle');
     setName('');
     setPartySize(1);
+    setWhatsapp('');
     setLink(`${window.location.origin}/rsvp/${body.guest.slug}`);
     router.refresh();
   }
@@ -58,6 +64,16 @@ export default function AddGuestForm() {
               </option>
             ))}
           </select>
+        </div>
+        <div className="field">
+          <label htmlFor="guestWhatsapp">WhatsApp number</label>
+          <input
+            id="guestWhatsapp"
+            type="tel"
+            value={whatsapp}
+            onChange={(e) => setWhatsapp(e.target.value)}
+            placeholder="+57 …"
+          />
         </div>
         <button className="submit-btn" type="submit" disabled={status === 'submitting'}>
           {status === 'submitting' ? 'Creating…' : 'Create link'}

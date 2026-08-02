@@ -10,7 +10,7 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
   }
 
-  const { display_name, party_size } = await request.json();
+  const { display_name, party_size, whatsapp } = await request.json();
 
   if (!display_name || !display_name.trim()) {
     return NextResponse.json({ error: 'Name is required' }, { status: 400 });
@@ -24,6 +24,7 @@ export async function POST(request) {
     .insert({
       display_name: display_name.trim(),
       party_size: Number(party_size) || 1,
+      whatsapp: whatsapp ? String(whatsapp).trim() || null : null,
       slug,
     })
     .select()

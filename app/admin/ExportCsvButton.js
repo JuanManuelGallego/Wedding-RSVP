@@ -2,13 +2,13 @@
 
 export default function ExportCsvButton({ rows }) {
   function handleExport() {
-    const header = ['Guest', 'Attending', 'Party size', 'Email', 'Submitted'];
+    const header = ['Guest', 'Attending', 'Party size', 'WhatsApp', 'Responded'];
     const lines = rows.map((r) => [
       r.guestName,
       r.attending ? 'Yes' : 'No',
       r.partySize,
-      r.email || '',
-      new Date(r.createdAt).toLocaleString(),
+      r.whatsapp || '',
+      new Date(r.respondedAt).toLocaleString(),
     ]);
 
     const csv = [header, ...lines]

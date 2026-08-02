@@ -20,22 +20,19 @@ export default async function AdminPage() {
     .select('*')
     .order('created_at', { ascending: false });
 
-  const { data: rsvps } = await supabaseAdmin
-    .from('rsvps')
-    .select('*, guests(display_name, slug)')
-    .order('created_at', { ascending: false });
-
+  const responded = (guests || []).filter((g) => g.attending !== null);
   const totalInvited = guests?.length || 0;
-  const responded = rsvps?.length || 0;
-  const attendingHeadcount =
-    rsvps?.filter((r) => r.attending).reduce((sum, r) => sum + (r.party_size || 0), 0) || 0;
+  const respondedCount = responded.length;
+  const attendingHeadcount = responded
+    .filter((g) => g.attending)
+    .reduce((sum, g) => sum + (g.party_size || 0), 0);
 
-  const csvRows = (rsvps || []).map((r) => ({
-    guestName: r.guests?.display_name || 'Unknown',
-    attending: r.attending,
-    partySize: r.party_size,
-    email: r.email,
-    createdAt: r.created_at,
+  const csvRows = responded.map((g) => ({
+    guestName: g.display_name,
+    attending: g.attending,
+    partySize: g.party_size,
+    whatsapp: g.whatsapp || '',
+    respondedAt: g.responded_at,
   }));
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL || '';
@@ -53,7 +50,7 @@ export default async function AdminPage() {
           <span>invited</span>
         </div>
         <div>
-          <strong>{responded}</strong>
+          <strong>{respondedCount}</strong>
           <span>responded</span>
         </div>
         <div>
@@ -80,6 +77,7 @@ export default async function AdminPage() {
               <tr>
                 <th>Name</th>
                 <th>Party size</th>
+                <th>WhatsApp</th>
                 <th>Link</th>
               </tr>
             </thead>
@@ -88,6 +86,7 @@ export default async function AdminPage() {
                 <tr key={g.id}>
                   <td>{g.display_name}</td>
                   <td>{g.party_size}</td>
+                  <td>{g.whatsapp || '—'}</td>
                   <td>
                     <a href={`/rsvp/${g.slug}`}>{`${origin}/rsvp/${g.slug}`}</a>
                   </td>
@@ -95,7 +94,7 @@ export default async function AdminPage() {
               ))}
               {(!guests || guests.length === 0) && (
                 <tr>
-                  <td colSpan={3}>No guests added yet.</td>
+                  <td colSpan={4}>No guests added yet.</td>
                 </tr>
               )}
             </tbody>
@@ -115,23 +114,21 @@ export default async function AdminPage() {
                 <th>Guest</th>
                 <th>Attending</th>
                 <th>Party size</th>
-                <th>Email</th>
-                <th>Submitted</th>
+                <th>Responded</th>
               </tr>
             </thead>
             <tbody>
-              {(rsvps || []).map((r) => (
-                <tr key={r.id}>
-                  <td>{r.guests?.display_name || 'Unknown'}</td>
-                  <td>{r.attending ? 'Yes' : 'No'}</td>
-                  <td>{r.party_size}</td>
-                  <td>{r.email || '—'}</td>
-                  <td>{new Date(r.created_at).toLocaleDateString()}</td>
+              {responded.map((g) => (
+                <tr key={g.id}>
+                  <td>{g.display_name}</td>
+                  <td>{g.attending ? 'Yes' : 'No'}</td>
+                  <td>{g.party_size}</td>
+                  <td>{new Date(g.responded_at).toLocaleDateString()}</td>
                 </tr>
               ))}
-              {(!rsvps || rsvps.length === 0) && (
+              {responded.length === 0 && (
                 <tr>
-                  <td colSpan={5}>No responses yet.</td>
+                  <td colSpan={4}>No responses yet.</td>
                 </tr>
               )}
             </tbody>

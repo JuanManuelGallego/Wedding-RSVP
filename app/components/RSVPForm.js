@@ -2,14 +2,13 @@
 
 import { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import { t } from '../../lib/i18n';
 
-export default function RSVPForm({ guest, existingRsvp }) {
-  const [attending, setAttending] = useState(
-    existingRsvp ? existingRsvp.attending : null
-  );
-  const [email, setEmail] = useState(existingRsvp?.email || '');
-  const [status, setStatus] = useState(existingRsvp ? 'done' : 'idle'); // idle | submitting | done | error
-  const isUpdate = Boolean(existingRsvp) || status === 'done';
+export default function RSVPForm({ guest, locale }) {
+  const hasResponded = guest.attending !== null;
+  const [attending, setAttending] = useState(hasResponded ? guest.attending : null);
+  const [status, setStatus] = useState(hasResponded ? 'done' : 'idle'); // idle | submitting | done | error
+  const isUpdate = hasResponded || status === 'done';
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -17,15 +16,10 @@ export default function RSVPForm({ guest, existingRsvp }) {
 
     setStatus('submitting');
 
-    const { error } = await supabase.from('rsvps').upsert(
-      {
-        guest_id: guest.id,
-        attending,
-        party_size: attending ? guest.party_size : 0,
-        email: email.trim() || null,
-      },
-      { onConflict: 'guest_id' }
-    );
+    const { error } = await supabase
+      .from('guests')
+      .update({ attending, responded_at: new Date().toISOString() })
+      .eq('id', guest.id);
 
     if (error) {
       console.error(error);
@@ -40,13 +34,9 @@ export default function RSVPForm({ guest, existingRsvp }) {
     return (
       <div className="confirmation">
         <p className="confirmation-mark">&</p>
-        <p>
-          {attending
-            ? `Thank you — we can't wait to celebrate with you.`
-            : `Thank you for letting us know. You'll be missed.`}
-        </p>
+        <p>{attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}</p>
         <button className="edit-response-btn" type="button" onClick={() => setStatus('idle')}>
-          Change your response
+          {t(locale, 'changeResponse')}
         </button>
       </div>
     );
@@ -55,18 +45,18 @@ export default function RSVPForm({ guest, existingRsvp }) {
   return (
     <form className="form" onSubmit={handleSubmit}>
       {isUpdate && (
-        <p className="already-responded-note">Update your response below.</p>
+        <p className="already-responded-note">{t(locale, 'updateNote')}</p>
       )}
 
       <div className="field">
-        <label>Will you be attending?</label>
+        <label>{t(locale, 'attendingLabel')}</label>
         <div className="attend-toggle" role="group" aria-label="Attendance">
           <button
             type="button"
             aria-pressed={attending === true}
             onClick={() => setAttending(true)}
           >
-            Yes
+            {t(locale, 'yes')}
           </button>
           <button
             type="button"
@@ -74,30 +64,19 @@ export default function RSVPForm({ guest, existingRsvp }) {
             aria-pressed={attending === false}
             onClick={() => setAttending(false)}
           >
-            No
+            {t(locale, 'no')}
           </button>
         </div>
       </div>
 
       {attending === true && guest.party_size > 1 && (
         <p className="form-note">
-          Your invitation includes {guest.party_size} guests.
+          {t(locale, 'partyNote', { count: guest.party_size })}
         </p>
       )}
 
-      <div className="field">
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="For updates about the day"
-        />
-      </div>
-
       {status === 'error' && (
-        <p className="form-error">Something went wrong sending that — please try again.</p>
+        <p className="form-error">{t(locale, 'error')}</p>
       )}
 
       <button
@@ -105,10 +84,14 @@ export default function RSVPForm({ guest, existingRsvp }) {
         type="submit"
         disabled={attending === null || status === 'submitting'}
       >
-        {status === 'submitting' ? 'Sending…' : isUpdate ? 'Update RSVP' : 'Send RSVP'}
+        {status === 'submitting'
+          ? t(locale, 'sending')
+          : isUpdate
+            ? t(locale, 'updateBtn')
+            : t(locale, 'sendBtn')}
       </button>
 
-      <p className="form-note">Please respond by August 1, 2026.</p>
+      <p className="form-note">{t(locale, 'deadline')}</p>
     </form>
   );
 }

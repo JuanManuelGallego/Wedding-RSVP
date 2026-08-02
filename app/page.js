@@ -1,50 +1,43 @@
+import { t } from '../lib/i18n';
+import { getLocale } from '../lib/locale';
+import { site } from '../lib/site';
+import LanguageToggle from './components/LanguageToggle';
+import TheDay from './components/TheDay';
+import StorySection from './components/StorySection';
+import GallerySection from './components/GallerySection';
+
 export default function Home() {
+  const locale = getLocale();
+
   return (
     <main>
+      <LanguageToggle />
+
       <section className="hero" style={{ borderTop: 'none' }}>
         <div className="hero-amp" aria-hidden="true">&</div>
         <div className="wrap">
-          <p className="eyebrow">Together with their families</p>
+          <p className="eyebrow">{t(locale, 'eyebrow')}</p>
           <h1 className="names">
-            Nora <em>&</em> Theo
+            {site.first} <em>&</em> {site.second}
           </h1>
-          <p className="hero-date">Saturday, September 12, 2026</p>
-          <p className="hero-place">Camden Hills, Maine</p>
+          <p className="hero-date">{t(locale, 'date')}</p>
+          <p className="hero-place">{t(locale, 'place')}</p>
         </div>
       </section>
 
-      <section>
-        <div className="wrap">
-          <h2 className="section-title">The Day</h2>
-          <div className="details-grid">
-            <div className="detail-card">
-              <p className="detail-label">Ceremony</p>
-              <p className="detail-title">4:00 PM</p>
-              <p className="detail-meta">Fernwood Orchard</p>
-              <p className="detail-meta">14 Orchard Lane, Camden</p>
-            </div>
-            <div className="detail-card">
-              <p className="detail-label">Reception</p>
-              <p className="detail-title">6:00 PM</p>
-              <p className="detail-meta">The Barn at Fernwood</p>
-              <p className="detail-meta">Dinner, dancing, and cake</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <TheDay locale={locale} />
+      <StorySection locale={locale} />
+      <GallerySection locale={locale} />
 
       <section>
         <div className="wrap" style={{ textAlign: 'center' }}>
-          <h2 className="section-title">RSVP</h2>
-          <p>
-            Please use the personal RSVP link from your invitation to let us know
-            you&apos;re coming. Can&apos;t find it? Reach out to Nora &amp; Theo directly.
-          </p>
+          <h2 className="section-title">{t(locale, 'rsvpTitle')}</h2>
+          <p>{t(locale, 'rsvpNote')}</p>
         </div>
       </section>
 
       <footer>
-        <p>With love, Nora &amp; Theo</p>
+        <p>{t(locale, 'footer')}</p>
       </footer>
     </main>
   );

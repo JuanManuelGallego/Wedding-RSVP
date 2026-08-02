@@ -1,13 +1,17 @@
 import './globals.css';
+import { getLocale } from '../lib/locale';
+import { site } from '../lib/site';
 
 export const metadata = {
-  title: 'Nora & Theo — September 12, 2026',
-  description: "You're invited. Please RSVP below.",
+  title: `${site.names} — June 6, 2027`,
+  description: `You're invited. ${site.names} — June 6, 2027.`,
 };
 
 export default function RootLayout({ children }) {
+  const locale = getLocale();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />

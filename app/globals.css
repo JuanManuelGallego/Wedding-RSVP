@@ -495,3 +495,93 @@ footer {
   text-align: center;
   margin-bottom: 20px;
 }
+
+/* ---------- Language toggle ---------- */
+
+.lang-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.lang-toggle button {
+  border: none;
+  background: none;
+  padding: 5px 12px;
+  font-family: var(--body);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+  color: var(--sage);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.lang-toggle button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--parchment);
+}
+
+/* ---------- Hero couple line (RSVP page) ---------- */
+
+.hero-couple {
+  position: relative;
+  z-index: 1;
+  margin-top: 20px;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--gold);
+}
+
+/* ---------- Story ---------- */
+
+.story-block {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.story-block h3 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--ink);
+  margin: 32px 0 12px;
+}
+
+.story-block p {
+  margin: 0;
+  font-size: 17px;
+}
+
+/* ---------- Gallery ---------- */
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 760px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.gallery-photo {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+  border-radius: 4px;
+}
