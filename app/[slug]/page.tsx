@@ -1,8 +1,8 @@
-import { createAdminClient } from '../../lib/supabaseAdmin';
-import { t } from '../../lib/i18n';
-import { getLocale, resolveLocale } from '../../lib/locale';
-import VideoInvite from '../components/rsvp/VideoInvite';
-import LanguageToggle from '../components/shared/LanguageToggle';
+import { createAdminClient } from '@/lib/supabaseAdmin';
+import { t } from '@/lib/i18n';
+import { getLocale, resolveLocale } from '@/lib/locale';
+import VideoInvite from '@/app/components/rsvp/VideoInvite';
+import LanguageToggle from '@/app/components/shared/LanguageToggle';
 
 export const dynamic = 'force-dynamic';
 

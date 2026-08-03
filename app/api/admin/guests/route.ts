@@ -1,43 +1,38 @@
-import { NextResponse } from 'next/server';
-import { isAuthed } from '../../../../lib/adminAuth';
-import { createAdminClient } from '../../../../lib/supabaseAdmin';
-import { makeSlug } from '../../../../lib/slug';
-import type { GuestInsert } from '../../../../lib/types';
+import { withAuth } from '@/lib/api/withAuth';
+import { createAdminClient } from '@/lib/supabaseAdmin';
+import { makeSlug } from '@/lib/slug';
+import { guestInsertSchema } from '@/lib/validations';
+import { jsonError, jsonSuccess } from '@/lib/api/responses';
 
 export const runtime = 'nodejs';
 
-export async function POST(request: Request) {
-  if (!isAuthed()) {
-    return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
+export const POST = withAuth(async (request: Request) => {
+  const body = await request.json().catch(() => null);
+  if (!body) return jsonError('Invalid JSON', 400);
+
+  const parsed = guestInsertSchema.safeParse(body);
+  if (!parsed.success) {
+    return jsonError(parsed.error.issues[0].message, 400);
   }
 
-  const { display_name, party_size, whatsapp } = (await request.json()) as {
-    display_name: string;
-    party_size: number;
-    whatsapp: string;
-  };
-
-  if (!display_name || !display_name.trim()) {
-    return NextResponse.json({ error: 'Name is required' }, { status: 400 });
-  }
-
+  const { display_name, party_size, whatsapp } = parsed.data;
   const supabaseAdmin = createAdminClient();
   const slug = makeSlug(display_name);
 
   const { data, error } = await supabaseAdmin
     .from('guests')
     .insert({
-      display_name: display_name.trim(),
-      party_size: Number(party_size) || 1,
+      display_name,
+      party_size,
       whatsapp: whatsapp ? String(whatsapp).trim() || null : null,
       slug,
-    } satisfies GuestInsert)
+    })
     .select()
     .single();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return jsonError(error.message, 500);
   }
 
-  return NextResponse.json({ guest: data });
-}
+  return jsonSuccess({ guest: data });
+});

@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import type { Guest } from '../../../lib/types';
-
-type Status = 'idle' | 'submitting' | 'error';
+import { useGuestMutations } from './hooks/useGuestMutations';
+import { FormStatus } from '@/lib/types';
+import type { Guest } from '@/lib/types';
 
 export default function EditGuestForm({
   guest,
@@ -16,31 +15,24 @@ export default function EditGuestForm({
   const [name, setName] = useState(guest.display_name);
   const [partySize, setPartySize] = useState(guest.party_size);
   const [whatsapp, setWhatsapp] = useState(guest.whatsapp ?? '');
-  const [status, setStatus] = useState<Status>('idle');
-  const router = useRouter();
+  const { savingId, error, updateGuest } = useGuestMutations();
+  const status: FormStatus =
+    savingId === guest.id
+      ? FormStatus.Submitting
+      : error
+        ? FormStatus.Error
+        : FormStatus.Idle;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus('submitting');
-
-    const res = await fetch(`/api/admin/guests/${guest.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        display_name: name,
-        party_size: Number(partySize),
-        whatsapp,
-      }),
+    const result = await updateGuest(guest.id, {
+      display_name: name,
+      party_size: Number(partySize),
+      whatsapp,
     });
-
-    if (!res.ok) {
-      setStatus('error');
-      return;
+    if (result.ok) {
+      onDone();
     }
-
-    setStatus('idle');
-    onDone();
-    router.refresh();
   }
 
   return (
@@ -81,13 +73,17 @@ export default function EditGuestForm({
               placeholder="+57 \u2026"
             />
           </div>
-          <button className="submit-btn" type="submit" disabled={status === 'submitting'}>
-            {status === 'submitting' ? 'Saving\u2026' : 'Save'}
+          <button
+            className="submit-btn"
+            type="submit"
+            disabled={status === FormStatus.Submitting}
+          >
+            {status === FormStatus.Submitting ? 'Saving\u2026' : 'Save'}
           </button>
           <button className="csv-btn" type="button" onClick={onDone}>
             Cancel
           </button>
-          {status === 'error' && (
+          {status === FormStatus.Error && (
             <p className="form-error">Couldn&apos;t save changes.</p>
           )}
         </form>

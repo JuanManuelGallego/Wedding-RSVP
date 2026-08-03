@@ -2,20 +2,19 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-type Status = 'idle' | 'submitting' | 'error';
+import { FormStatus } from '@/lib/types';
 
 export default function AddGuestForm() {
   const [name, setName] = useState('');
   const [partySize, setPartySize] = useState(1);
   const [whatsapp, setWhatsapp] = useState('');
-  const [status, setStatus] = useState<Status>('idle');
+  const [status, setStatus] = useState<FormStatus>(FormStatus.Idle);
   const [link, setLink] = useState('');
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus('submitting');
+    setStatus(FormStatus.Submitting);
     setLink('');
 
     const res = await fetch('/api/admin/guests', {
@@ -31,11 +30,11 @@ export default function AddGuestForm() {
     const body = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      setStatus('error');
+      setStatus(FormStatus.Error);
       return;
     }
 
-    setStatus('idle');
+    setStatus(FormStatus.Idle);
     setName('');
     setPartySize(1);
     setWhatsapp('');
@@ -81,11 +80,13 @@ export default function AddGuestForm() {
             placeholder="+57 \u2026"
           />
         </div>
-        <button className="submit-btn" type="submit" disabled={status === 'submitting'}>
-          {status === 'submitting' ? 'Creating\u2026' : 'Create link'}
+        <button className="submit-btn" type="submit" disabled={status === FormStatus.Submitting}>
+          {status === FormStatus.Submitting ? 'Creating\u2026' : 'Create link'}
         </button>
       </form>
-      {status === 'error' && <p className="form-error">Couldn&apos;t create that guest.</p>}
+      {status === FormStatus.Error && (
+        <p className="form-error">Couldn&apos;t create that guest.</p>
+      )}
       {link && (
         <p className="admin-new-link">
           Link created: <a href={link}>{link}</a>

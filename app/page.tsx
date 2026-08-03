@@ -1,12 +1,12 @@
-import { t } from '../lib/i18n';
-import { getLocale, resolveLocale } from '../lib/locale';
-import { site } from '../lib/site';
-import LanguageToggle from './components/shared/LanguageToggle';
-import TheDay from './components/home/TheDay';
-import StorySection from './components/home/StorySection';
-import GallerySection from './components/home/GallerySection';
-import Countdown from './components/shared/Countdown';
-import ScrollReveal from './components/shared/ScrollReveal';
+import { t } from '@/lib/i18n';
+import { getLocale, resolveLocale } from '@/lib/locale';
+import { site } from '@/lib/site';
+import LanguageToggle from '@/app/components/shared/LanguageToggle';
+import TheDay from '@/app/components/home/TheDay';
+import StorySection from '@/app/components/home/StorySection';
+import GallerySection from '@/app/components/home/GallerySection';
+import Countdown from '@/app/components/shared/Countdown';
+import ScrollReveal from '@/app/components/shared/ScrollReveal';
 
 export default function Home({ searchParams }: { searchParams?: Record<string, string | undefined> }) {
   const locale = resolveLocale({ cookie: getLocale(), param: searchParams?.lang });

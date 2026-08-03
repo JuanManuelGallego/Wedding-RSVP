@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import EditGuestForm from './EditGuestForm';
 import { useGuestMutations } from './hooks/useGuestMutations';
-import type { Guest } from '../../../lib/types';
+import type { Guest } from '@/lib/types';
 
 export default function GuestLinksTable({
   guests,

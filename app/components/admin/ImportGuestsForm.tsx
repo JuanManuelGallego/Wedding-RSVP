@@ -2,8 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-
-type Status = 'idle' | 'uploading' | 'error';
+import { FormStatus } from '@/lib/types';
 
 interface ImportResult {
   created?: number;
@@ -12,7 +11,7 @@ interface ImportResult {
 }
 
 export default function ImportGuestsForm() {
-  const [status, setStatus] = useState<Status>('idle');
+  const [status, setStatus] = useState<FormStatus>(FormStatus.Idle);
   const [result, setResult] = useState<ImportResult | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -21,7 +20,7 @@ export default function ImportGuestsForm() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setStatus('uploading');
+    setStatus(FormStatus.Uploading);
     setResult(null);
 
     const text = await file.text();
@@ -35,13 +34,13 @@ export default function ImportGuestsForm() {
     const body = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      setStatus('error');
+      setStatus(FormStatus.Error);
       setResult(body);
       if (fileInput.current) fileInput.current.value = '';
       return;
     }
 
-    setStatus('idle');
+    setStatus(FormStatus.Idle);
     setResult(body);
     if (fileInput.current) fileInput.current.value = '';
     router.refresh();
@@ -58,9 +57,9 @@ export default function ImportGuestsForm() {
         type="file"
         accept=".csv,text/csv"
         onChange={handleFile}
-        disabled={status === 'uploading'}
+        disabled={status === FormStatus.Uploading}
       />
-      {status === 'uploading' && <p className="form-note">Importing\u2026</p>}
+      {status === FormStatus.Uploading && <p className="form-note">Importing\u2026</p>}
       {result && !result.error && (
         <p className="form-note">
           Added {result.created} guest{result.created === 1 ? '' : 's'}.

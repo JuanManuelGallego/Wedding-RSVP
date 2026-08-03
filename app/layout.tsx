@@ -1,6 +1,6 @@
 import './globals.css';
-import { getLocale } from '../lib/locale';
-import { site } from '../lib/site';
+import { getLocale } from '@/lib/locale';
+import { site } from '@/lib/site';
 import type { Metadata, Viewport } from 'next';
 
 export const metadata: Metadata = {

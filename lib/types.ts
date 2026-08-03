@@ -1,5 +1,25 @@
 export type Locale = 'es' | 'fr';
 
+export enum VideoPhase {
+  Poster = 'poster',
+  Playing = 'playing',
+  Ended = 'ended',
+  Done = 'done',
+}
+
+export enum SubmitStatus {
+  Idle = 'idle',
+  Submitting = 'submitting',
+  Error = 'error',
+}
+
+export enum FormStatus {
+  Idle = 'idle',
+  Submitting = 'submitting',
+  Uploading = 'uploading',
+  Error = 'error',
+}
+
 export interface Guest {
   id: string;
   created_at: string;

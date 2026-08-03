@@ -1,12 +1,12 @@
-import { isAuthed } from '../../lib/adminAuth';
-import { createAdminClient } from '../../lib/supabaseAdmin';
-import AdminLogin from '../components/admin/AdminLogin';
-import AddGuestForm from '../components/admin/AddGuestForm';
-import ImportGuestsForm from '../components/admin/ImportGuestsForm';
-import ExportCsvButton from '../components/admin/ExportCsvButton';
-import LogoutButton from '../components/admin/LogoutButton';
-import GuestLinksTable from '../components/admin/GuestLinksTable';
-import type { Guest } from '../../lib/types';
+import { isAuthed } from '@/lib/adminAuth';
+import { createAdminClient } from '@/lib/supabaseAdmin';
+import AdminLogin from '@/app/components/admin/AdminLogin';
+import AddGuestForm from '@/app/components/admin/AddGuestForm';
+import ImportGuestsForm from '@/app/components/admin/ImportGuestsForm';
+import ExportCsvButton from '@/app/components/admin/ExportCsvButton';
+import LogoutButton from '@/app/components/admin/LogoutButton';
+import GuestLinksTable from '@/app/components/admin/GuestLinksTable';
+import type { Guest } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 

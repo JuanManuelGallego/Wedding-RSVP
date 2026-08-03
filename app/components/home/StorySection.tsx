@@ -1,5 +1,5 @@
-import { t } from '../../../lib/i18n';
-import type { Locale } from '../../../lib/types';
+import { t } from '@/lib/i18n';
+import type { Locale } from '@/lib/types';
 
 export default function StorySection({ locale }: { locale: Locale }) {
   return (

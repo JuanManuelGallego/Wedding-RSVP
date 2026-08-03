@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
-import { isAuthed } from '../../../../../lib/adminAuth';
-import { createAdminClient } from '../../../../../lib/supabaseAdmin';
-import { makeSlug } from '../../../../../lib/slug';
-import type { GuestInsert } from '../../../../../lib/types';
+import { withAuth } from '@/lib/api/withAuth';
+import { createAdminClient } from '@/lib/supabaseAdmin';
+import { makeSlug } from '@/lib/slug';
+import { csvImportSchema } from '@/lib/validations';
+import { jsonError, jsonSuccess } from '@/lib/api/responses';
+import type { GuestInsert } from '@/lib/types';
 
 export const runtime = 'nodejs';
 
@@ -47,26 +48,18 @@ function parseCsv(text: string): string[][] {
   return rows.filter((r) => r.some((cell) => cell.trim() !== ''));
 }
 
-interface ImportResult {
-  created?: number;
-  skipped?: Array<{ row: string[]; reason: string }>;
-  guests?: unknown[];
-  error?: string;
-}
+export const POST = withAuth(async (request: Request) => {
+  const body = await request.json().catch(() => null);
+  if (!body) return jsonError('Invalid JSON', 400);
 
-export async function POST(request: Request): Promise<NextResponse<ImportResult>> {
-  if (!isAuthed()) {
-    return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
+  const parsed = csvImportSchema.safeParse(body);
+  if (!parsed.success) {
+    return jsonError(parsed.error.issues[0].message, 400);
   }
 
-  const { csv } = (await request.json()) as { csv: string };
-  if (!csv || !csv.trim()) {
-    return NextResponse.json({ error: 'No CSV content received' }, { status: 400 });
-  }
-
-  const rows = parseCsv(csv);
+  const rows = parseCsv(parsed.data.csv);
   if (rows.length === 0) {
-    return NextResponse.json({ error: 'CSV appears to be empty' }, { status: 400 });
+    return jsonError('CSV appears to be empty', 400);
   }
 
   // Skip a header row like "name,party_size" if present.
@@ -101,18 +94,15 @@ export async function POST(request: Request): Promise<NextResponse<ImportResult>
   }
 
   if (toInsert.length === 0) {
-    return NextResponse.json(
-      { error: 'No valid rows found', skipped },
-      { status: 400 }
-    );
+    return jsonError('No valid rows found', 400);
   }
 
   const supabaseAdmin = createAdminClient();
   const { data, error } = await supabaseAdmin.from('guests').insert(toInsert).select();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return jsonError(error.message, 500);
   }
 
-  return NextResponse.json({ created: data.length, skipped, guests: data });
-}
+  return jsonSuccess({ created: data.length, skipped, guests: data });
+});

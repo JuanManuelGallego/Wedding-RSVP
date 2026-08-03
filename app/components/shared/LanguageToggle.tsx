@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { LOCALES, DEFAULT_LOCALE } from '../../../lib/i18n';
-import type { Locale } from '../../../lib/types';
+import { LOCALES, DEFAULT_LOCALE } from '@/lib/i18n';
+import type { Locale } from '@/lib/types';
 
 const LABELS: Record<Locale, string> = { es: 'ES', fr: 'FR' };
 
