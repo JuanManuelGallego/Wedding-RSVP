@@ -97,7 +97,6 @@ export default function VideoInvite({ guest, locale }) {
         <div className="video-invite__content">
           <div className="video-invite__inner">
             <p className="eyebrow">{t(locale, 'attendingLabel')}</p>
-            <p className="eyebrow">{t(locale, 'date')}</p>
             {status === 'done' ? (
               <div className="confirmation">
                 <p className="eyebrow">{attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}</p>
@@ -111,6 +110,7 @@ export default function VideoInvite({ guest, locale }) {
               </div>
             ) : (
               <>
+                <p className="eyebrow">{t(locale, 'date')}</p>
                 <div className="video-invite__buttons" role="group" aria-label="Attendance">
                   <button
                     className="video-invite__answer video-invite__answer--yes"
