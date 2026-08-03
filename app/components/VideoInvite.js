@@ -110,11 +110,6 @@ export default function VideoInvite({ guest, locale }) {
               </div>
             ) : (
               <>
-                {isReturningGuest && status === 'idle' && (
-                  <p className="already-responded-note">
-                    {attending ? t(locale, 'alreadyRespondedYes') : t(locale, 'alreadyRespondedNo')}
-                  </p>
-                )}
                 <div className="video-invite__buttons" role="group" aria-label="Attendance">
                   <button
                     className="video-invite__answer video-invite__answer--yes"
@@ -133,7 +128,11 @@ export default function VideoInvite({ guest, locale }) {
                     {t(locale, 'no')}
                   </button>
                 </div>
-
+                {isReturningGuest && status === 'idle' && (
+                  <p className="already-responded-note">
+                    {attending ? t(locale, 'alreadyRespondedYes') : t(locale, 'alreadyRespondedNo')}
+                  </p>
+                )}
                 {guest.party_size > 1 && (
                   <p className="form-note">
                     {t(locale, 'partyNote', { count: guest.party_size })}
