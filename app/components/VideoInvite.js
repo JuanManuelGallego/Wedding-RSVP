@@ -65,7 +65,11 @@ export default function VideoInvite({ guest, locale }) {
 
       {phase === 'poster' && (
         <div className="video-invite__poster">
-          <p className="eyebrow">{t(locale, 'invitedEyebrow')}</p>
+          {guest.size === 1 ? (
+            <p className="eyebrow">{t(locale, 'invitedEyebrow')}</p>
+          ) : (
+            <p className="eyebrow">{t(locale, 'invitedEyebrowParty')}</p>
+          )}
           <p className="video-invite__name">{guest.display_name}</p>
           <div className="video-invite__ornament">
             <span className="video-invite__ornament-diamond" />
