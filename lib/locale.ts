@@ -2,8 +2,9 @@ import { cookies } from 'next/headers';
 import { LOCALES, DEFAULT_LOCALE } from './i18n';
 import type { Locale } from './types';
 
-export function getLocale(): Locale {
-  const cookie = cookies().get('lang')?.value;
+export async function getLocale(): Promise<Locale> {
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get('lang')?.value;
   return LOCALES.includes(cookie as Locale) ? (cookie as Locale) : DEFAULT_LOCALE;
 }
 

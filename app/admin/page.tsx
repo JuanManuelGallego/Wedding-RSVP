@@ -11,7 +11,7 @@ import type { Guest } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
-  if (!isAuthed()) {
+  if (!(await isAuthed())) {
     return <AdminLogin />;
   }
 

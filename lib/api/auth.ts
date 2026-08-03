@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { isAuthed } from '../adminAuth';
 
-export function requireAuth(): NextResponse | null {
-  if (!isAuthed()) {
+export async function requireAuth(): Promise<NextResponse | null> {
+  if (!(await isAuthed())) {
     return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
   }
   return null;

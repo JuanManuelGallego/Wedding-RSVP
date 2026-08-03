@@ -8,7 +8,8 @@ export function expectedToken(): string {
   return crypto.createHash('sha256').update(secret).digest('hex');
 }
 
-export function isAuthed(): boolean {
-  const token = cookies().get(COOKIE_NAME)?.value;
+export async function isAuthed(): Promise<boolean> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
   return Boolean(token) && Boolean(process.env.ADMIN_PASSWORD) && token === expectedToken();
 }

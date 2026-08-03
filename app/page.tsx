@@ -8,8 +8,8 @@ import GallerySection from '@/app/components/home/GallerySection';
 import Countdown from '@/app/components/shared/Countdown';
 import ScrollReveal from '@/app/components/shared/ScrollReveal';
 
-export default function Home({ searchParams }: { searchParams?: Record<string, string | undefined> }) {
-  const locale = resolveLocale({ cookie: getLocale(), param: searchParams?.lang });
+export default async function Home({ searchParams }: { searchParams?: Record<string, string | undefined> }) {
+  const locale = resolveLocale({ cookie: await getLocale(), param: searchParams?.lang });
 
   return (
     <main>

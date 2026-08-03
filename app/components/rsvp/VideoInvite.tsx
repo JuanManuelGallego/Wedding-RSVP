@@ -97,7 +97,6 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
 
   return (
     <div className="video-invite">
-      {/* Video element */}
       {(phase === VideoPhase.Playing || phase === VideoPhase.Ended) && (
         <>
           <video
@@ -119,7 +118,6 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
         </>
       )}
 
-      {/* Poster / play button */}
       {phase === VideoPhase.Poster && (
         <div className="video-invite__poster">
           {guest.party_size === 1 ? (
@@ -143,7 +141,6 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
         </div>
       )}
 
-      {/* RSVP buttons — Yes + No */}
       {phase === VideoPhase.Ended && (
         <div className="video-invite__confirm-overlay" role="region" aria-live="polite">
           <p className="video-invite__confirm-question">{t(locale, 'attendingLabel')}</p>
@@ -184,7 +181,6 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
         </div>
       )}
 
-      {/* Confirmation message */}
       {phase === VideoPhase.Done && (
         <div className="video-invite__confirm-overlay">
           <div className="video-invite__confirmation">

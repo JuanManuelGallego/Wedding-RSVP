@@ -20,7 +20,7 @@ export enum FormStatus {
   Error = 'error',
 }
 
-export interface Guest {
+export type Guest = {
   id: string;
   created_at: string;
   slug: string;
@@ -31,31 +31,36 @@ export interface Guest {
   lang: Locale;
   attending: boolean | null;
   responded_at: string | null;
-}
+};
 
-export interface GuestInsert {
+export type GuestInsert = {
   display_name: string;
   party_size: number;
   whatsapp: string | null;
   slug: string;
-}
+};
 
-export interface GuestUpdate {
+export type GuestUpdate = {
   display_name?: string;
   party_size?: number;
   whatsapp?: string | null;
   invite_sent?: boolean;
   lang?: Locale;
-}
+  attending?: boolean | null;
+  responded_at?: string | null;
+};
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       guests: {
         Row: Guest;
         Insert: GuestInsert;
         Update: GuestUpdate;
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
   };
-}
+};

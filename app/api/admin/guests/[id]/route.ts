@@ -7,7 +7,7 @@ import type { GuestUpdate, Locale } from '@/lib/types';
 export const runtime = 'nodejs';
 
 export const PATCH = withAuth(async (request: Request, context) => {
-  const id = context?.params?.id;
+  const { id } = await context!.params;
   if (!id) return jsonError('Missing guest ID', 400);
 
   const body = await request.json().catch(() => null);
