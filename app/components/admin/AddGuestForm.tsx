@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FormStatus } from '@/lib/types';
 
+const CSRF_HEADERS = { 'X-Requested-With': 'XMLHttpRequest' };
+
 export default function AddGuestForm() {
   const [name, setName] = useState('');
   const [partySize, setPartySize] = useState(1);
@@ -17,29 +19,33 @@ export default function AddGuestForm() {
     setStatus(FormStatus.Submitting);
     setLink('');
 
-    const res = await fetch('/api/admin/guests', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        display_name: name,
-        party_size: partySize,
-        whatsapp,
-      }),
-    });
+    try {
+      const res = await fetch('/api/admin/guests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...CSRF_HEADERS },
+        body: JSON.stringify({
+          display_name: name,
+          party_size: partySize,
+          whatsapp,
+        }),
+      });
 
-    const body = await res.json().catch(() => ({}));
+      const body = await res.json().catch(() => ({}));
 
-    if (!res.ok) {
+      if (!res.ok) {
+        setStatus(FormStatus.Error);
+        return;
+      }
+
+      setStatus(FormStatus.Idle);
+      setName('');
+      setPartySize(1);
+      setWhatsapp('');
+      setLink(`${window.location.origin}/${body.guest.slug}`);
+      router.refresh();
+    } catch {
       setStatus(FormStatus.Error);
-      return;
     }
-
-    setStatus(FormStatus.Idle);
-    setName('');
-    setPartySize(1);
-    setWhatsapp('');
-    setLink(`${window.location.origin}/${body.guest.slug}`);
-    router.refresh();
   }
 
   return (
@@ -63,7 +69,7 @@ export default function AddGuestForm() {
             value={partySize}
             onChange={(e) => setPartySize(Number(e.target.value))}
           >
-            {[1, 2, 3, 4, 5, 6].map((n) => (
+            {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
               <option key={n} value={n}>
                 {n}
               </option>
@@ -77,7 +83,7 @@ export default function AddGuestForm() {
             type="tel"
             value={whatsapp}
             onChange={(e) => setWhatsapp(e.target.value)}
-            placeholder="+57 \u2026"
+            placeholder="+57 ..."
           />
         </div>
         <button className="submit-btn" type="submit" disabled={status === FormStatus.Submitting}>

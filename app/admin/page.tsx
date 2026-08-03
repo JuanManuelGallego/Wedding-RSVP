@@ -97,7 +97,7 @@ export default async function AdminPage() {
                   <td>{g.display_name}</td>
                   <td>{g.attending ? 'Yes' : 'No'}</td>
                   <td>{g.party_size}</td>
-                  <td>{new Date(g.responded_at!).toLocaleDateString()}</td>
+                  <td>{new Date(g.responded_at ?? '').toLocaleDateString()}</td>
                 </tr>
               ))}
               {responded.length === 0 && (

@@ -847,6 +847,23 @@ footer {
   text-align: center;
 }
 
+.video-invite__replay-btn {
+  background: none;
+  border: none;
+  color: rgba(246, 241, 231, 0.6);
+  font-family: var(--body);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 16px;
+  transition: color 0.2s ease;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.video-invite__replay-btn:hover {
+  color: var(--parchment);
+}
+
 .video-invite__confirm-error-wrap {
   display: flex;
   flex-direction: column;
@@ -886,12 +903,72 @@ footer {
   }
 }
 
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--line);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 0.8s linear infinite;
+}
+
+.btn-primary {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 24px;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--body);
+}
+
 .video-invite__confirmation {
   color: var(--parchment);
 }
 
 .video-invite__confirmation .eyebrow {
   color: var(--parchment);
+}
+
+.video-invite__done-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.video-invite__done-btn {
+  padding: clamp(12px, 3vw, 16px) clamp(24px, 6vw, 40px);
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid rgba(246, 241, 231, 0.4);
+  background: rgba(246, 241, 231, 0.08);
+  color: var(--parchment);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.video-invite__done-btn:hover {
+  background: rgba(246, 241, 231, 0.18);
+  transform: scale(1.03);
+}
+
+.video-invite__done-btn:active {
+  transform: scale(0.97);
+}
+
+.video-invite__confirm-btn--selected {
+  background: rgba(212, 175, 55, 0.3);
+  border-color: rgba(212, 175, 55, 0.7);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
 /* ---------- Scroll reveal ---------- */

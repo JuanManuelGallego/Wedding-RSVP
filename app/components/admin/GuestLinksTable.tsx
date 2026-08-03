@@ -5,6 +5,8 @@ import EditGuestForm from './EditGuestForm';
 import { useGuestMutations } from './hooks/useGuestMutations';
 import type { Guest } from '@/lib/types';
 
+const CSRF_HEADERS = { 'X-Requested-With': 'XMLHttpRequest' };
+
 export default function GuestLinksTable({
   guests,
   origin,
@@ -15,12 +17,12 @@ export default function GuestLinksTable({
   const [editingId, setEditingId] = useState<string | null>(null);
   const { savingId, error, updateGuest } = useGuestMutations();
 
-  function toggleSent(g: Guest) {
-    updateGuest(g.id, { invite_sent: !g.invite_sent });
+  async function toggleSent(g: Guest) {
+    await updateGuest(g.id, { invite_sent: !g.invite_sent });
   }
 
-  function setLang(g: Guest, lang: string) {
-    updateGuest(g.id, { lang });
+  async function setLang(g: Guest, lang: string) {
+    await updateGuest(g.id, { lang });
   }
 
   return (

@@ -16,8 +16,8 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
   const [attending, setAttending] = useState<boolean | null>(guest.attending);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(SubmitStatus.Idle);
   const [isBuffering, setIsBuffering] = useState(false);
+  const [jumpToEnd, setJumpToEnd] = useState(false);
 
-  // Cleanup video on unmount
   useEffect(() => {
     const video = videoRef.current;
     return () => {
@@ -29,7 +29,6 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
     };
   }, []);
 
-  // Start video when phase changes to Playing
   useEffect(() => {
     if (phase === VideoPhase.Playing) {
       const video = videoRef.current;
@@ -38,9 +37,15 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
         video.play()?.catch(() => setPhase(VideoPhase.Ended));
       }
     }
-  }, [phase]);
+    if (phase === VideoPhase.Ended && jumpToEnd) {
+      const video = videoRef.current;
+      if (video && video.duration) {
+        video.currentTime = video.duration;
+        setJumpToEnd(false);
+      }
+    }
+  }, [phase, jumpToEnd]);
 
-  // Keyboard shortcut: space to play/pause
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.code !== 'Space' || e.target instanceof HTMLButtonElement) return;
@@ -109,6 +114,12 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
             onError={() => setPhase(VideoPhase.Ended)}
             onWaiting={() => setIsBuffering(true)}
             onPlaying={() => setIsBuffering(false)}
+            onLoadedMetadata={() => {
+              if (jumpToEnd && videoRef.current) {
+                videoRef.current.currentTime = videoRef.current.duration;
+                setJumpToEnd(false);
+              }
+            }}
           />
           {isBuffering && phase === VideoPhase.Playing && (
             <div className="video-invite__poster" style={{ background: 'transparent' }}>
@@ -146,7 +157,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
           <p className="video-invite__confirm-question">{t(locale, 'attendingLabel')}</p>
           <div className="video-invite__confirm-actions">
             <button
-              className="video-invite__confirm-btn"
+              className={`video-invite__confirm-btn${isReturningGuest && attending === true ? ' video-invite__confirm-btn--selected' : ''}`}
               type="button"
               onClick={() => submitRsvp(true)}
               disabled={submitStatus === SubmitStatus.Submitting}
@@ -156,7 +167,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
                 : t(locale, 'yes')}
             </button>
             <button
-              className="video-invite__confirm-btn video-invite__confirm-btn--decline"
+              className={`video-invite__confirm-btn video-invite__confirm-btn--decline${isReturningGuest && attending === false ? ' video-invite__confirm-btn--selected' : ''}`}
               type="button"
               onClick={() => submitRsvp(false)}
               disabled={submitStatus === SubmitStatus.Submitting}
@@ -166,6 +177,15 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
                 : t(locale, 'no')}
             </button>
           </div>
+          <button
+            className="video-invite__replay-btn"
+            type="button"
+            onClick={() => {
+              setPhase(VideoPhase.Playing);
+            }}
+          >
+            {t(locale, 'replay')}
+          </button>
           {submitStatus === SubmitStatus.Error && (
             <div className="video-invite__confirm-error-wrap">
               <p className="video-invite__confirm-error">{t(locale, 'error')}</p>
@@ -188,6 +208,25 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
               {attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}
             </p>
             {attending && <p className="eyebrow">{t(locale, 'realInvite')}</p>}
+          </div>
+          <div className="video-invite__done-actions">
+            <button
+              className="video-invite__done-btn"
+              type="button"
+              onClick={() => setPhase(VideoPhase.Poster)}
+            >
+              {t(locale, 'replay')}
+            </button>
+            <button
+              className="video-invite__done-btn"
+              type="button"
+              onClick={() => {
+                setJumpToEnd(true);
+                setPhase(VideoPhase.Ended);
+              }}
+            >
+              {t(locale, 'changeResponse')}
+            </button>
           </div>
         </div>
       )}

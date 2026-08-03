@@ -1,5 +1,7 @@
 'use client';
 
+import ErrorBoundary from '@/app/components/shared/ErrorBoundary';
+
 export default function GuestInviteError({
   error,
   reset,
@@ -12,22 +14,7 @@ export default function GuestInviteError({
       <section className="hero" style={{ borderTop: 'none' }}>
         <div className="wrap">
           <p className="eyebrow">Error</p>
-          <p style={{ fontSize: 18 }}>{error.message}</p>
-          <button
-            onClick={reset}
-            style={{
-              marginTop: 24,
-              padding: '12px 24px',
-              background: 'var(--gold)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 4,
-              cursor: 'pointer',
-              fontFamily: 'var(--body)',
-            }}
-          >
-            Try again
-          </button>
+          <ErrorBoundary error={error} reset={reset} />
         </div>
       </section>
     </main>

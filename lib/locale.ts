@@ -2,10 +2,17 @@ import { cookies } from 'next/headers';
 import { LOCALES, DEFAULT_LOCALE } from './i18n';
 import type { Locale } from './types';
 
+export function isLocale(value: string | undefined): value is Locale {
+  return Boolean(value) && (LOCALES as readonly string[]).includes(value!);
+}
+
+export function asLocale(value: string | undefined): Locale {
+  return isLocale(value) ? value : DEFAULT_LOCALE;
+}
+
 export async function getLocale(): Promise<Locale> {
   const cookieStore = await cookies();
-  const cookie = cookieStore.get('lang')?.value;
-  return LOCALES.includes(cookie as Locale) ? (cookie as Locale) : DEFAULT_LOCALE;
+  return asLocale(cookieStore.get('lang')?.value);
 }
 
 export function resolveLocale({
@@ -17,8 +24,8 @@ export function resolveLocale({
   param?: string;
   fallback?: Locale;
 }): Locale {
-  if (param && LOCALES.includes(param as Locale)) return param as Locale;
-  if (cookie && LOCALES.includes(cookie as Locale)) return cookie as Locale;
-  if (fallback && LOCALES.includes(fallback)) return fallback;
+  if (isLocale(param)) return param;
+  if (isLocale(cookie)) return cookie;
+  if (fallback) return fallback;
   return DEFAULT_LOCALE;
 }

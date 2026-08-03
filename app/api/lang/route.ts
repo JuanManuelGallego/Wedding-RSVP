@@ -1,10 +1,14 @@
 import { langSchema } from '@/lib/validations';
 import { jsonSuccess } from '@/lib/api/responses';
+import { requireCsrf } from '@/lib/api/withAuth';
 import type { Locale } from '@/lib/types';
 
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
+  const csrfError = requireCsrf(request);
+  if (csrfError) return csrfError;
+
   const body = await request.json().catch(() => null);
   if (!body) return jsonSuccess({ ok: true });
 
@@ -14,6 +18,7 @@ export async function POST(request: Request) {
   const res = jsonSuccess({ ok: true });
   res.cookies.set('lang', parsed.data.locale, {
     path: '/',
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 365, // 1 year
   });

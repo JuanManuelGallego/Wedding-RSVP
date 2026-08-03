@@ -16,7 +16,7 @@ export default function ExportCsvButton({ rows }: { rows: CsvRow[] }) {
       r.attending ? 'Yes' : 'No',
       r.partySize,
       r.whatsapp ?? '',
-      new Date(r.respondedAt!).toLocaleString(),
+      new Date(r.respondedAt ?? '').toLocaleString(),
     ]);
 
     const csv = [header, ...lines]

@@ -4,6 +4,6 @@ export function makeSlug(name: string): string {
     .trim()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-+|-+$)/g, '');
-  const suffix = Math.random().toString(36).slice(2, 6);
+  const suffix = crypto.randomUUID().replace(/-/g, '').slice(0, 4);
   return base ? `${base}-${suffix}` : suffix;
 }

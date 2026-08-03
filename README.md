@@ -65,12 +65,12 @@ Visit http://localhost:3000, and http://localhost:3000/admin to add your first g
 
 ## 4. Personalize
 
-- Couple names: `lib/site.js`
-- All translated text (dates, venue, story, labels, deadline): `lib/i18n.js` —
+- Couple names: `lib/site.ts`
+- All translated text (dates, venue, story, labels, deadline): `lib/i18n.ts` —
   the Our Story body is Lorem Ipsum, replace `storyHowWeMetBody` /
   `storyProposalBody` in both languages when ready.
 - Photos: drop JPEGs into `public/` as `photo-01.jpg` … `photo-12.jpg`
-  (update `PHOTO_COUNT` in `app/components/GallerySection.js` if you change
+  (update `PHOTO_COUNT` in `app/components/home/GallerySection.tsx` if you change
   the number of photos).
 - Colors, fonts: `app/globals.css` (CSS variables at the top)
 

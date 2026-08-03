@@ -2,13 +2,13 @@ import { z } from 'zod';
 
 export const guestInsertSchema = z.object({
   display_name: z.string().trim().min(1, 'Name is required'),
-  party_size: z.number().int().min(1).max(20).default(1),
+  party_size: z.number().int().min(1).max(10).default(1),
   whatsapp: z.string().nullable().optional(),
 });
 
 export const guestUpdateSchema = z.object({
   display_name: z.string().trim().min(1).optional(),
-  party_size: z.number().int().min(1).max(20).optional(),
+  party_size: z.number().int().min(1).max(10).optional(),
   whatsapp: z.string().nullable().optional(),
   invite_sent: z.boolean().optional(),
   lang: z.enum(['es', 'fr']).optional(),

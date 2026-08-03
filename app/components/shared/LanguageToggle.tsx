@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { LOCALES, DEFAULT_LOCALE } from '@/lib/i18n';
 import type { Locale } from '@/lib/types';
 
+const CSRF_HEADERS = { 'X-Requested-With': 'XMLHttpRequest' };
 const LABELS: Record<Locale, string> = { es: 'ES', fr: 'FR' };
 
 function cookieLocale(): Locale {
@@ -28,11 +29,15 @@ export default function LanguageToggle() {
   async function switchTo(next: Locale) {
     if (next === active) return;
     setLocale(next);
-    await fetch('/api/lang', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ locale: next }),
-    });
+    try {
+      await fetch('/api/lang', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...CSRF_HEADERS },
+        body: JSON.stringify({ locale: next }),
+      });
+    } catch {
+      // lang cookie is best-effort
+    }
     const sp = new URLSearchParams(searchParams.toString());
     sp.set('lang', next);
     router.replace(`${pathname}?${sp.toString()}`);

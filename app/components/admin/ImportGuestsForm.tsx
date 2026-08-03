@@ -4,6 +4,8 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { FormStatus } from '@/lib/types';
 
+const CSRF_HEADERS = { 'X-Requested-With': 'XMLHttpRequest' };
+
 interface ImportResult {
   created?: number;
   skipped?: Array<{ row: string[]; reason: string }>;
@@ -23,27 +25,33 @@ export default function ImportGuestsForm() {
     setStatus(FormStatus.Uploading);
     setResult(null);
 
-    const text = await file.text();
+    try {
+      const text = await file.text();
 
-    const res = await fetch('/api/admin/guests/import', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ csv: text }),
-    });
+      const res = await fetch('/api/admin/guests/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...CSRF_HEADERS },
+        body: JSON.stringify({ csv: text }),
+      });
 
-    const body = await res.json().catch(() => ({}));
+      const body = await res.json().catch(() => ({}));
 
-    if (!res.ok) {
-      setStatus(FormStatus.Error);
+      if (!res.ok) {
+        setStatus(FormStatus.Error);
+        setResult(body);
+        if (fileInput.current) fileInput.current.value = '';
+        return;
+      }
+
+      setStatus(FormStatus.Idle);
       setResult(body);
       if (fileInput.current) fileInput.current.value = '';
-      return;
+      router.refresh();
+    } catch {
+      setStatus(FormStatus.Error);
+      setResult({ error: 'Network error. Please try again.' });
+      if (fileInput.current) fileInput.current.value = '';
     }
-
-    setStatus(FormStatus.Idle);
-    setResult(body);
-    if (fileInput.current) fileInput.current.value = '';
-    router.refresh();
   }
 
   return (

@@ -2,12 +2,17 @@
 
 import { useRouter } from 'next/navigation';
 
+const CSRF_HEADERS = { 'X-Requested-With': 'XMLHttpRequest' };
+
 export default function LogoutButton() {
   const router = useRouter();
 
   async function handleLogout() {
-    await fetch('/api/admin/logout', { method: 'POST' });
-    router.refresh();
+    try {
+      await fetch('/api/admin/logout', { method: 'POST', headers: CSRF_HEADERS });
+    } finally {
+      router.refresh();
+    }
   }
 
   return (
