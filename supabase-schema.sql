@@ -9,9 +9,17 @@ create table if not exists guests (
   display_name text not null,
   party_size int not null default 1, -- set by admin; the guest can't change this
   whatsapp text,                     -- admin-only: number to send the link to
+  invite_sent boolean not null default false, -- admin-only: link sent to guest?
+  lang text not null default 'es',      -- admin-only: guest's invite language (es|fr)
   attending boolean,                 -- null = hasn't responded yet
   responded_at timestamp with time zone
 );
+
+-- For installs that created the table before invite_sent existed.
+alter table guests add column if not exists invite_sent boolean not null default false;
+
+-- For installs that created the table before lang existed.
+alter table guests add column if not exists lang text not null default 'es';
 
 -- Lock the table down by default. Guest lookups and admin reads happen only
 -- through the server using the service role key, which bypasses RLS.

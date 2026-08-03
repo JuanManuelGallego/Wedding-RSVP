@@ -7,7 +7,6 @@ import LanguageToggle from '../components/LanguageToggle';
 export const dynamic = 'force-dynamic';
 
 export default async function VideoInvitePage({ params, searchParams }) {
-  const locale = resolveLocale({ cookie: getLocale(), param: searchParams?.lang });
   const supabaseAdmin = createAdminClient();
 
   const { data: guest } = await supabaseAdmin
@@ -15,6 +14,12 @@ export default async function VideoInvitePage({ params, searchParams }) {
     .select('*')
     .eq('slug', params.slug)
     .single();
+
+  const locale = resolveLocale({
+    cookie: getLocale(),
+    param: searchParams?.lang,
+    fallback: guest?.lang,
+  });
 
   if (!guest) {
     return (

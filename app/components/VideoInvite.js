@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { t } from '../../lib/i18n';
 
@@ -10,9 +10,22 @@ export default function VideoInvite({ guest, locale }) {
   const [attending, setAttending] = useState(guest.attending);
   const [status, setStatus] = useState('idle'); // idle | submitting | done | error
 
+  useEffect(() => {
+    if (phase === 'playing') {
+      const video = videoRef.current;
+      if (video) {
+        video.currentTime = 0;
+        video.play()?.catch(() => setPhase('buttons'));
+      }
+    }
+  }, [phase]);
+
   function startVideo() {
     setPhase('playing');
-    videoRef.current?.play()?.catch(() => setPhase('buttons'));
+  }
+
+  function replay() {
+    setPhase('playing');
   }
 
   function fadeOut() {
@@ -42,7 +55,7 @@ export default function VideoInvite({ guest, locale }) {
 
   return (
     <div className={`video-invite${phase === 'fading' ? ' video-invite--fading' : ''}`}>
-      {phase !== 'buttons' && (
+      {phase !== 'poster' && phase !== 'buttons' && (
         <video
           ref={videoRef}
           className="video-invite__video"
@@ -124,6 +137,10 @@ export default function VideoInvite({ guest, locale }) {
                 {status === 'error' && <p className="form-error">{t(locale, 'error')}</p>}
               </>
             )}
+
+            <button className="video-invite__replay" type="button" onClick={replay}>
+              {t(locale, 'replay')}
+            </button>
           </div>
         </div>
       )}

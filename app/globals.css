@@ -452,6 +452,17 @@ footer {
   background: rgba(22, 35, 63, 0.03);
 }
 
+.admin-lang-select {
+  padding: 4px 6px;
+  font-family: var(--body);
+  font-size: 13px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .admin-edit-form {
   padding: 6px 0;
 }
@@ -783,6 +794,25 @@ footer {
 .video-invite__buttons + .form-note,
 .video-invite__buttons + .form-error {
   margin-top: 18px;
+}
+
+.video-invite__replay {
+  margin-top: 24px;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-family: var(--body);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.video-invite__replay:hover {
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 .video-invite__content .confirmation {

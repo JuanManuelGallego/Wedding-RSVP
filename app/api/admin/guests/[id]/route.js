@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { isAuthed } from '../../../../../lib/adminAuth';
 import { createAdminClient } from '../../../../../lib/supabaseAdmin';
+import { LOCALES } from '../../../../../lib/i18n';
 
 export const runtime = 'nodejs';
 
@@ -9,10 +10,14 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
   }
 
-  const { display_name, party_size, whatsapp } = await request.json();
+  const { display_name, party_size, whatsapp, invite_sent, lang } = await request.json();
 
   if (display_name != null && !display_name.trim()) {
     return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+  }
+
+  if (lang != null && !LOCALES.includes(lang)) {
+    return NextResponse.json({ error: 'Invalid language' }, { status: 400 });
   }
 
   const supabaseAdmin = createAdminClient();
@@ -21,6 +26,8 @@ export async function PATCH(request, { params }) {
   if (display_name != null) updates.display_name = display_name.trim();
   if (party_size != null) updates.party_size = Number(party_size) || 1;
   if (whatsapp != null) updates.whatsapp = String(whatsapp).trim() || null;
+  if (typeof invite_sent === 'boolean') updates.invite_sent = invite_sent;
+  if (lang != null) updates.lang = lang;
 
   const { data, error } = await supabaseAdmin
     .from('guests')

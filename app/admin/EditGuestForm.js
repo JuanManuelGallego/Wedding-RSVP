@@ -36,7 +36,7 @@ export default function EditGuestForm({ guest, onDone }) {
 
   return (
     <tr className="admin-edit-row">
-      <td colSpan={5}>
+      <td colSpan={7}>
         <form className="form form--inline admin-edit-form" onSubmit={handleSubmit}>
           <div className="field">
             <label htmlFor={`editName-${guest.id}`}>Name</label>
