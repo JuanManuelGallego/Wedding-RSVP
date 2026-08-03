@@ -639,11 +639,6 @@ footer {
   inset: 0;
   z-index: 20;
   background: #0A0E19;
-  transition: background 0.6s ease;
-}
-
-.video-invite--fading {
-  background: var(--parchment);
 }
 
 .video-invite__video {
@@ -653,8 +648,6 @@ footer {
   height: 100%;
   object-fit: contain;
   background: #0A0E19;
-  opacity: 1;
-  transition: opacity 0.6s ease;
 }
 
 .video-invite__poster {
@@ -667,12 +660,6 @@ footer {
   text-align: center;
   padding: 24px;
   background: #0A0E19;
-  transition: opacity 0.6s ease;
-}
-
-.video-invite--fading .video-invite__video,
-.video-invite--fading .video-invite__poster {
-  opacity: 0;
 }
 
 .video-invite__poster .eyebrow {
@@ -756,41 +743,24 @@ footer {
   opacity: 0.9;
 }
 
-.video-invite__skip {
-  position: absolute;
-  bottom: 24px;
-  right: 24px;
-  z-index: 5;
-  border: 1px solid rgba(246, 241, 231, 0.5);
-  background: rgba(22, 35, 63, 0.5);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  color: var(--parchment);
-  font-family: var(--body);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 9px 16px env(safe-area-inset-right, 0px);
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.video-invite__content {
+.video-invite__confirm-overlay {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  gap: 16px;
+  padding: 20px 20px 13%;
   text-align: center;
-  background: rgba(10, 14, 25, 0.65);
-  animation: video-invite-in 0.6s ease both;
+  background: rgba(10, 14, 25, 0.55);
+  animation: video-invite-in 0.5s ease both;
 }
 
 @keyframes video-invite-in {
   from {
     opacity: 0;
-    transform: translateY(16px) scale(0.97);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -798,97 +768,49 @@ footer {
   }
 }
 
-.video-invite__inner {
-  width: 100%;
-  max-width: 480px;
-}
-
-.video-invite__inner .eyebrow {
-  color: var(--parchment);
-}
-
-.video-invite__inner .video-invite__name {
-  color: var(--ink);
-}
-
-.video-invite__buttons {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-}
-
-.video-invite__answer {
-  flex: 1;
-  padding: clamp(14px, 3.5vw, 18px);
+.video-invite__confirm-btn {
+  padding: clamp(16px, 4vw, 22px) clamp(32px, 8vw, 56px);
   font-family: var(--body);
   font-size: 17px;
-  letter-spacing: 0.04em;
-  border: 1.5px solid rgba(22, 35, 63, 0.25);
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--ink);
-  border-radius: 8px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1.5px solid rgba(246, 241, 231, 0.7);
+  background: rgba(246, 241, 231, 0.12);
+  color: var(--parchment);
+  border-radius: 999px;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
-    transform 0.15s ease;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
-.video-invite__answer:hover {
-  transform: translateY(-1px);
+.video-invite__confirm-btn:hover {
+  background: rgba(246, 241, 231, 0.22);
+  transform: scale(1.04);
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.25);
 }
 
-.video-invite__answer--yes[aria-pressed='true'] {
-  background: rgba(124, 139, 111, 0.85);
-  border-color: var(--sage);
-  color: #fff;
+.video-invite__confirm-btn:active {
+  transform: scale(0.97);
 }
 
-.video-invite__answer--no[aria-pressed='true'] {
-  background: rgba(184, 169, 201, 0.85);
-  border-color: var(--lavender);
-  color: #fff;
+.video-invite__confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
 }
 
-.video-invite__buttons + .form-note,
-.video-invite__buttons + .form-error {
-  margin-top: 18px;
+.video-invite__confirm-error {
+  color: #e57373;
+  font-size: 14px;
 }
 
-.video-invite__replay {
-  margin-top: 24px;
-  background: none;
-  border: 1px solid rgba(246, 241, 231, 0.4);
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-family: var(--body);
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  color: var(--parchment);
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
-}
-
-.video-invite__replay:hover {
-  border-color: var(--parchment);
+.video-invite__confirmation {
   color: var(--parchment);
 }
 
-.video-invite__content .confirmation {
-  padding: 0;
-  color: var(--parchment);
-}
-
-.video-invite__content .form-note {
-  color: var(--parchment);
-  opacity: 0.8;
-}
-
-.video-invite__content .edit-response-btn {
-  border-color: rgba(246, 241, 231, 0.4);
-  color: var(--parchment);
-}
-
-.video-invite__content .edit-response-btn:hover {
-  border-color: var(--parchment);
+.video-invite__confirmation .eyebrow {
   color: var(--parchment);
 }
 
@@ -1075,20 +997,4 @@ footer {
     opacity: 1;
     transform: none;
   }
-}
-
-/* ---------- RSVP button selected state ---------- */
-
-.video-invite__answer--yes[aria-pressed='true'] {
-  transform: scale(1.02);
-}
-
-.video-invite__answer--yes:not([aria-pressed='true']):hover {
-  border-color: var(--sage);
-  color: var(--sage);
-}
-
-.video-invite__answer--no:not([aria-pressed='true']):hover {
-  border-color: var(--lavender);
-  color: var(--lavender);
 }

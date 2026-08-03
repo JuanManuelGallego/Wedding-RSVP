@@ -7,16 +7,16 @@ import { t } from '../../lib/i18n';
 export default function VideoInvite({ guest, locale }) {
   const isReturningGuest = guest.attending !== null;
   const videoRef = useRef(null);
-  const [phase, setPhase] = useState(isReturningGuest ? 'buttons' : 'poster'); // poster | playing | fading | buttons
+  const [phase, setPhase] = useState(isReturningGuest ? 'done' : 'poster');
   const [attending, setAttending] = useState(guest.attending);
-  const [status, setStatus] = useState('idle'); // idle | submitting | done | error
+  const [status, setStatus] = useState('idle');
 
   useEffect(() => {
     if (phase === 'playing') {
       const video = videoRef.current;
       if (video) {
         video.currentTime = 0;
-        video.play()?.catch(() => setPhase('buttons'));
+        video.play()?.catch(() => setPhase('ended'));
       }
     }
   }, [phase]);
@@ -25,24 +25,18 @@ export default function VideoInvite({ guest, locale }) {
     setPhase('playing');
   }
 
-  function replay() {
-    setPhase('playing');
+  function onEnded() {
+    setPhase('ended');
   }
 
-  function fadeOut() {
-    if (phase === 'fading') return;
-    setPhase('fading');
-    window.setTimeout(() => setPhase('buttons'), 650);
-  }
-
-  async function answer(value) {
+  async function confirm() {
     if (status === 'submitting') return;
-    setAttending(value);
     setStatus('submitting');
+    setAttending(true);
 
     const { error } = await supabase
       .from('guests')
-      .update({ attending: value, responded_at: new Date().toISOString() })
+      .update({ attending: true, responded_at: new Date().toISOString() })
       .eq('id', guest.id);
 
     if (error) {
@@ -52,19 +46,20 @@ export default function VideoInvite({ guest, locale }) {
     }
 
     setStatus('done');
+    setPhase('done');
   }
 
   return (
-    <div className={`video-invite${phase === 'fading' ? ' video-invite--fading' : ''}`}>
-      {phase !== 'poster' && phase !== 'buttons' && (
+    <div className="video-invite">
+      {(phase === 'playing' || phase === 'ended') && (
         <video
           ref={videoRef}
           className="video-invite__video"
           src="/video.mp4"
           preload="auto"
           playsInline
-          onEnded={fadeOut}
-          onError={() => setPhase('buttons')}
+          onEnded={onEnded}
+          onError={() => setPhase('ended')}
         />
       )}
 
@@ -87,66 +82,27 @@ export default function VideoInvite({ guest, locale }) {
         </div>
       )}
 
-      {phase !== 'poster' && phase !== 'buttons' && (
-        <button className="video-invite__skip" type="button" onClick={fadeOut}>
-          {t(locale, 'skip')}
-        </button>
+      {phase === 'ended' && (
+        <div className="video-invite__confirm-overlay">
+          <button
+            className="video-invite__confirm-btn"
+            type="button"
+            onClick={confirm}
+            disabled={status === 'submitting'}
+          >
+            {status === 'submitting' ? '...' : t(locale, 'confirmAttendance')}
+          </button>
+          {status === 'error' && (
+            <p className="video-invite__confirm-error">{t(locale, 'error')}</p>
+          )}
+        </div>
       )}
 
-      {phase === 'buttons' && (
-        <div className="video-invite__content">
-          <div className="video-invite__inner">
-            <p className="eyebrow">{t(locale, 'attendingLabel')}</p>
-            {status === 'done' ? (
-              <div className="confirmation">
-                <p className="eyebrow">{attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}</p>
-                <p className="eyebrow">{attending && t(locale, 'realInvite')}</p><button
-                  className="edit-response-btn"
-                  type="button"
-                  onClick={() => setStatus('idle')}
-                >
-                  {t(locale, 'changeResponse')}
-                </button>
-              </div>
-            ) : (
-              <>
-                <p className="eyebrow">{t(locale, 'date')}</p>
-                <div className="video-invite__buttons" role="group" aria-label="Attendance">
-                  <button
-                    className="video-invite__answer video-invite__answer--yes"
-                    type="button"
-                    aria-pressed={attending === true}
-                    onClick={() => answer(true)}
-                  >
-                    {t(locale, 'yes')}
-                  </button>
-                  <button
-                    className="video-invite__answer video-invite__answer--no"
-                    type="button"
-                    aria-pressed={attending === false}
-                    onClick={() => answer(false)}
-                  >
-                    {t(locale, 'no')}
-                  </button>
-                </div>
-                {isReturningGuest && status === 'idle' && (
-                  <p className="already-responded-note">
-                    {attending ? t(locale, 'alreadyRespondedYes') : t(locale, 'alreadyRespondedNo')}
-                  </p>
-                )}
-                {guest.party_size > 1 && (
-                  <p className="form-note">
-                    {t(locale, 'partyNote', { count: guest.party_size })}
-                  </p>
-                )}
-
-                {status === 'error' && <p className="form-error">{t(locale, 'error')}</p>}
-              </>
-            )}
-
-            <button className="video-invite__replay" type="button" onClick={replay}>
-              {t(locale, 'replay')}
-            </button>
+      {phase === 'done' && (
+        <div className="video-invite__confirm-overlay">
+          <div className="video-invite__confirmation">
+            <p className="eyebrow">{attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}</p>
+            {attending && <p className="eyebrow">{t(locale, 'realInvite')}</p>}
           </div>
         </div>
       )}
