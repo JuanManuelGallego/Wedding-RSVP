@@ -5,6 +5,7 @@ import AddGuestForm from './AddGuestForm';
 import ImportGuestsForm from './ImportGuestsForm';
 import ExportCsvButton from './ExportCsvButton';
 import LogoutButton from './LogoutButton';
+import GuestLinksTable from './GuestLinksTable';
 
 export const dynamic = 'force-dynamic';
 
@@ -71,35 +72,7 @@ export default async function AdminPage() {
 
       <section className="admin-section">
         <h2>Guest links</h2>
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Party size</th>
-                <th>WhatsApp</th>
-                <th>Link</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(guests || []).map((g) => (
-                <tr key={g.id}>
-                  <td>{g.display_name}</td>
-                  <td>{g.party_size}</td>
-                  <td>{g.whatsapp || '—'}</td>
-                  <td>
-                    <a href={`/rsvp/${g.slug}`}>{`${origin}/rsvp/${g.slug}`}</a>
-                  </td>
-                </tr>
-              ))}
-              {(!guests || guests.length === 0) && (
-                <tr>
-                  <td colSpan={4}>No guests added yet.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <GuestLinksTable guests={guests || []} origin={origin} />
       </section>
 
       <section className="admin-section">

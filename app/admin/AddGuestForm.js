@@ -37,7 +37,7 @@ export default function AddGuestForm() {
     setName('');
     setPartySize(1);
     setWhatsapp('');
-    setLink(`${window.location.origin}/rsvp/${body.guest.slug}`);
+    setLink(`${window.location.origin}/${body.guest.slug}`);
     router.refresh();
   }
 

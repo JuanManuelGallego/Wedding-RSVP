@@ -1,13 +1,13 @@
 import { t } from '../lib/i18n';
-import { getLocale } from '../lib/locale';
+import { getLocale, resolveLocale } from '../lib/locale';
 import { site } from '../lib/site';
 import LanguageToggle from './components/LanguageToggle';
 import TheDay from './components/TheDay';
 import StorySection from './components/StorySection';
 import GallerySection from './components/GallerySection';
 
-export default function Home() {
-  const locale = getLocale();
+export default function Home({ searchParams }) {
+  const locale = resolveLocale({ cookie: getLocale(), param: searchParams?.lang });
 
   return (
     <main>

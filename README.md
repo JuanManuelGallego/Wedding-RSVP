@@ -2,8 +2,8 @@
 
 A bilingual (Español / Français) wedding invite site with unique per-guest RSVP
 links and a password-protected admin page to manage guests and see responses.
-No guest accounts or logins — each guest just gets a private link that carries
-the full invitation: story, photos, and the RSVP form at the bottom.
+No guest accounts or logins — each guest just gets a private link that plays a
+full-screen invitation video, then asks for their RSVP.
 
 - Wedding: Sunday, June 6, 2027 · 4:00 PM — Yerbabuena, La Ceja (reception to follow)
 - RSVP deadline: September 1, 2026
@@ -11,10 +11,11 @@ the full invitation: story, photos, and the RSVP form at the bottom.
 ## How it works
 
 - `/` — the public info page (hero, the day, our story, gallery)
-- `/rsvp/[slug]` — a guest's personal invitation: hero with their name, the
-  story, the gallery, and the RSVP form at the bottom. Party size is fixed by
-  the admin, not chosen by the guest. If they've already responded, they see
-  their answer and can change it any time.
+- `/[slug]` — a guest's personal invitation: a full-screen video (replace
+  `public/video.mp4`) that fades into big Yes/No RSVP buttons. Party size is
+  fixed by the admin, not chosen by the guest. If they've already responded,
+  they can change their answer any time. Append `?lang=fr` to the link to
+  open it in French (Spanish is the default).
 - `/admin` — gated by a single shared password (`ADMIN_PASSWORD`). From here
   you add guests one at a time or via CSV import, see all responses, and
   export a CSV. Each guest row also stores a **WhatsApp number** (admin-only,
@@ -31,10 +32,14 @@ one year. The admin panel stays in English.
 1. Create a project at https://supabase.com
 2. Go to **SQL Editor → New query**, paste the contents of `supabase-schema.sql`, and run it.
    This creates the single `guests` table — each row holds the guest details
-   and their RSVP (`attending`, `responded_at`).
+   and their RSVP (`attending`, `responded_at`). The schema also locks the
+   table down: browsers can only read/write the RSVP fields (`id`,
+   `attending`, `responded_at`); guest names, party sizes, and WhatsApp
+   numbers are only reachable server-side with the service role key.
 3. Go to **Project Settings → API** and copy:
    - **Project URL**
-   - **anon public** key
+   - **publishable** key (for the browser — if your project only shows an
+     `anon` key, copy that instead and use `NEXT_PUBLIC_SUPABASE_ANON_KEY`)
    - **service_role** key (keep this one secret — it has full database access)
 
 ## 2. Configure the app
@@ -43,9 +48,9 @@ one year. The admin panel stays in English.
 2. Fill in all five values:
    ```
    NEXT_PUBLIC_SUPABASE_URL=...
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
    NEXT_PUBLIC_SITE_URL=...          # your deployed URL, used to print guest links
-   SUPABASE_SERVICE_ROLE_KEY=...     # server-only, used by /admin and /rsvp/[slug]
+   SUPABASE_SERVICE_ROLE_KEY=...     # server-only, used by /admin and /[slug]
    ADMIN_PASSWORD=...                # whatever password you'll use to log into /admin
    ```
 
@@ -81,7 +86,7 @@ Visit http://localhost:3000, and http://localhost:3000/admin to add your first g
 
 **One at a time:** go to `/admin`, log in, and under **Add a guest** enter
 each guest or family name, their exact party size, and their WhatsApp number
-— this creates a link like `yoursite.com/rsvp/the-alvarez-family-x7k2`.
+— this creates a link like `yoursite.com/the-alvarez-family-x7k2`.
 
 **In bulk:** under **Import guests from CSV**, upload a file with up to three columns:
 
@@ -106,7 +111,7 @@ time to see or change their answer.
 ## Security notes
 
 - The `service_role` key has full access to your database — it's only ever used
-  server-side (in `/admin` and `/rsvp/[slug]`), never sent to the browser.
+  server-side (in `/admin` and `/[slug]`), never sent to the browser.
 - The admin gate is a single shared password, not per-user accounts — fine for a
   couple managing their own guest list, not meant for anything higher-stakes.
 - Guest links act as the "password" for each guest's RSVP — anyone with the link

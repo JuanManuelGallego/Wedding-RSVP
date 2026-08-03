@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { LOCALES, DEFAULT_LOCALE } from '../../lib/i18n';
 
 const LABELS = { es: 'ES', fr: 'FR' };
@@ -15,18 +15,25 @@ function cookieLocale() {
 export default function LanguageToggle() {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [locale, setLocale] = useState(cookieLocale);
 
   if (pathname?.startsWith('/admin')) return null;
 
+  const urlLocale = searchParams.get('lang');
+  const active = urlLocale && LOCALES.includes(urlLocale) ? urlLocale : locale;
+
   async function switchTo(next) {
-    if (next === locale) return;
+    if (next === active) return;
     setLocale(next);
     await fetch('/api/lang', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ locale: next }),
     });
+    const sp = new URLSearchParams(searchParams.toString());
+    sp.set('lang', next);
+    router.replace(`${pathname}?${sp.toString()}`);
     router.refresh();
   }
 
@@ -36,7 +43,7 @@ export default function LanguageToggle() {
         <button
           key={l}
           type="button"
-          aria-pressed={l === locale}
+          aria-pressed={l === active}
           onClick={() => switchTo(l)}
         >
           {LABELS[l]}
