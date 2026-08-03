@@ -389,8 +389,7 @@ footer {
 }
 
 .admin-section {
-  margin-bottom: 48px;
-  padding-top: 32px;
+  padding-top: 15px;
   border-top: 1px solid var(--line);
 }
 
@@ -517,6 +516,35 @@ footer {
   font-size: 13px;
 }
 
+.import-file-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.import-file-label {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.import-file-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.import-file-name {
+  font-size: 14px;
+  color: var(--sage);
+  margin-left: 4px;
+}
+
 .edit-response-btn {
   margin-top: 16px;
   background: none;
@@ -532,6 +560,94 @@ footer {
 .edit-response-btn:hover {
   border-color: var(--lavender);
   color: var(--lavender);
+}
+
+/* -- Admin toolbar, search, filter, sort, pagination -- */
+
+.admin-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.admin-search {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.admin-search:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.admin-filter-select {
+  padding: 8px 12px;
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.admin-filter-select:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.admin-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.admin-sortable:hover {
+  color: var(--gold);
+}
+
+.admin-sort-icon {
+  margin-left: 4px;
+  font-size: 10px;
+}
+
+.admin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.admin-pagination button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.admin-pagination-info {
+  font-size: 13px;
+  color: var(--sage);
+  letter-spacing: 0.04em;
+}
+
+.status-pending {
+  color: var(--sage);
+}
+
+.status-yes {
+  color: #2d8a4e;
+}
+
+.status-no {
+  color: #c0392b;
 }
 
 .already-responded-note {

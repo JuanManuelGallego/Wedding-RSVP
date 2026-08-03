@@ -255,7 +255,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
               disabled={submitStatus === SubmitStatus.Submitting}
             >
               {submitStatus === SubmitStatus.Submitting && attending === true
-                ? '\u2026'
+                ? '…'
                 : t(locale, 'yes')}
             </button>
             <button
@@ -265,7 +265,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
               disabled={submitStatus === SubmitStatus.Submitting}
             >
               {submitStatus === SubmitStatus.Submitting && attending === false
-                ? '\u2026'
+                ? '…'
                 : t(locale, 'no')}
             </button>
           </div>

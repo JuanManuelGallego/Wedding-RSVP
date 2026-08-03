@@ -76,18 +76,8 @@ export default function AddGuestForm() {
             ))}
           </select>
         </div>
-        <div className="field">
-          <label htmlFor="guestWhatsapp">WhatsApp number</label>
-          <input
-            id="guestWhatsapp"
-            type="tel"
-            value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
-            placeholder="+57 300 123 4567"
-          />
-        </div>
         <button className="submit-btn" type="submit" disabled={status === FormStatus.Submitting}>
-          {status === FormStatus.Submitting ? 'Creating\u2026' : 'Create link'}
+          {status === FormStatus.Submitting ? 'Creating…' : 'Create link'}
         </button>
       </form>
       {status === FormStatus.Error && (

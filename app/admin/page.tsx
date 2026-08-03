@@ -3,9 +3,8 @@ import { createAdminClient } from '@/lib/supabaseAdmin';
 import AdminLogin from '@/app/components/admin/AdminLogin';
 import AddGuestForm from '@/app/components/admin/AddGuestForm';
 import ImportGuestsForm from '@/app/components/admin/ImportGuestsForm';
-import ExportCsvButton from '@/app/components/admin/ExportCsvButton';
 import LogoutButton from '@/app/components/admin/LogoutButton';
-import GuestLinksTable from '@/app/components/admin/GuestLinksTable';
+import GuestListTable from '@/app/components/admin/GuestListTable';
 import type { Guest } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -30,14 +29,6 @@ export default async function AdminPage() {
   const attendingHeadcount = responded
     .filter((g: Guest) => g.attending)
     .reduce((sum: number, g: Guest) => sum + (g.party_size ?? 0), 0);
-
-  const csvRows = responded.map((g: Guest) => ({
-    guestName: g.display_name,
-    attending: g.attending,
-    partySize: g.party_size,
-    whatsapp: g.whatsapp ?? '',
-    respondedAt: g.responded_at,
-  }));
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? '';
 
@@ -66,6 +57,13 @@ export default async function AdminPage() {
           <span>attending (headcount)</span>
         </div>
       </div>
+      
+      <section className="admin-section">
+        <div className="admin-section-header">
+          <h2>All Guests</h2>
+        </div>
+        <GuestListTable guests={guests ?? []} origin={origin} />
+      </section>
 
       <section className="admin-section">
         <h2>Add a guest</h2>
@@ -75,45 +73,6 @@ export default async function AdminPage() {
       <section className="admin-section">
         <h2>Import guests from CSV</h2>
         <ImportGuestsForm />
-      </section>
-
-      <section className="admin-section">
-        <h2>Guest links</h2>
-        <GuestLinksTable guests={guests ?? []} origin={origin} />
-      </section>
-
-      <section className="admin-section">
-        <div className="admin-section-header">
-          <h2>Responses</h2>
-          <ExportCsvButton rows={csvRows} />
-        </div>
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Guest</th>
-                <th>Attending</th>
-                <th>Party size</th>
-                <th>Responded</th>
-              </tr>
-            </thead>
-            <tbody>
-              {responded.map((g: Guest) => (
-                <tr key={g.id}>
-                  <td>{g.display_name}</td>
-                  <td>{g.attending ? 'Yes' : 'No'}</td>
-                  <td>{g.party_size}</td>
-                  <td>{new Date(g.responded_at ?? '').toLocaleDateString()}</td>
-                </tr>
-              ))}
-              {responded.length === 0 && (
-                <tr>
-                  <td colSpan={4}>No responses yet.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
       </section>
     </main>
   );

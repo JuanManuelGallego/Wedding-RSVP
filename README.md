@@ -47,11 +47,11 @@ one year. The admin panel stays in English.
 1. Copy `.env.local.example` to `.env.local`
 2. Fill in all five values:
    ```
-   NEXT_PUBLIC_SUPABASE_URL=...
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
-   NEXT_PUBLIC_SITE_URL=...          # your deployed URL, used to print guest links
-   SUPABASE_SERVICE_ROLE_KEY=...     # server-only, used by /admin and /[slug]
-   ADMIN_PASSWORD=...                # whatever password you'll use to log into /admin
+   NEXT_PUBLIC_SUPABASE_URL=…
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=…
+   NEXT_PUBLIC_SITE_URL=…          # your deployed URL, used to print guest links
+   SUPABASE_SERVICE_ROLE_KEY=…     # server-only, used by /admin and /[slug]
+   ADMIN_PASSWORD=…                # whatever password you'll use to log into /admin
    ```
 
 ## 3. Run it locally

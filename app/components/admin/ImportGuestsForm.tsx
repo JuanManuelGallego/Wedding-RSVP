@@ -18,9 +18,12 @@ export default function ImportGuestsForm() {
   const fileInput = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
+  const [fileName, setFileName] = useState('');
+
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    setFileName(file.name);
 
     setStatus(FormStatus.Uploading);
     setResult(null);
@@ -57,7 +60,7 @@ export default function ImportGuestsForm() {
   return (
     <div className="import-guests">
       <label className="import-label" htmlFor="csvFile">
-        Upload CSV (columns: <code>name, party_size, whatsapp</code>)
+        Upload CSV (columns: <code>name, party_size, whatsapp, language</code>)
       </label>
       <input
         id="csvFile"
@@ -66,8 +69,16 @@ export default function ImportGuestsForm() {
         accept=".csv,text/csv"
         onChange={handleFile}
         disabled={status === FormStatus.Uploading}
+        className="import-file-hidden"
       />
-      {status === FormStatus.Uploading && <p className="form-note">Importing\u2026</p>}
+      <label
+        htmlFor="csvFile"
+        className={`submit-btn import-file-label${status === FormStatus.Uploading ? ' import-file-disabled' : ''}`}
+      >
+        {status === FormStatus.Uploading ? 'Importing\u2026' : 'Choose file'}
+      </label>
+      {fileName && <span className="import-file-name">{fileName}</span>}
+      {status === FormStatus.Uploading && <p className="form-note">Importing…</p>}
       {result && !result.error && (
         <p className="form-note">
           Added {result.created} guest{result.created === 1 ? '' : 's'}.

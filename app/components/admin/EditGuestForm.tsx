@@ -70,7 +70,7 @@ export default function EditGuestForm({
               type="tel"
               value={whatsapp}
               onChange={(e) => setWhatsapp(e.target.value)}
-              placeholder="+57 \u2026"
+              placeholder="+57 …"
             />
           </div>
           <button
@@ -78,7 +78,7 @@ export default function EditGuestForm({
             type="submit"
             disabled={status === FormStatus.Submitting}
           >
-            {status === FormStatus.Submitting ? 'Saving\u2026' : 'Save'}
+            {status === FormStatus.Submitting ? 'Saving…' : 'Save'}
           </button>
           <button className="csv-btn" type="button" onClick={onDone}>
             Cancel

@@ -49,7 +49,7 @@ export default function AdminLogin() {
           </div>
           {error && <p className="form-error">{error}</p>}
           <button className="submit-btn" type="submit" disabled={loading}>
-            {loading ? 'Checking\u2026' : 'Enter'}
+            {loading ? 'Checking…' : 'Enter'}
           </button>
         </form>
       </div>
