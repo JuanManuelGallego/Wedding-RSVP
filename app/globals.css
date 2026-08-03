@@ -16,6 +16,11 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  touch-action: manipulation;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -131,8 +136,22 @@ a:focus-visible {
 /* ---------- Sections ---------- */
 
 section {
-  padding: 56px 0;
-  border-top: 1px solid var(--line);
+  padding: 72px 0;
+}
+
+.section-divider {
+  position: relative;
+  border-top: none;
+}
+
+.section-divider::before {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 1px;
+  background: var(--gold);
+  margin: 0 auto 72px;
+  opacity: 0.5;
 }
 
 .section-title {
@@ -143,6 +162,7 @@ section {
   color: var(--ink);
   margin: 0 0 28px;
   text-align: center;
+  text-wrap: balance;
 }
 
 .details-grid {
@@ -817,4 +837,200 @@ footer {
 
 .video-invite__content .confirmation {
   padding: 0;
+}
+
+/* ---------- Scroll reveal ---------- */
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Countdown ---------- */
+
+.countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 36px;
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 56px;
+}
+
+.countdown-number {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-top: 6px;
+}
+
+.countdown-sep {
+  font-family: var(--display);
+  font-size: 28px;
+  color: var(--gold);
+  opacity: 0.6;
+  margin-top: -16px;
+}
+
+/* ---------- Gallery hover ---------- */
+
+.gallery-photo {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.gallery-photo:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(22, 35, 63, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-photo {
+    transition: none;
+  }
+  .gallery-photo:hover {
+    transform: none;
+  }
+}
+
+/* ---------- Gold shimmer (RSVP confirmation) ---------- */
+
+@keyframes gold-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--ink) 0%,
+    var(--ink) 40%,
+    var(--gold) 50%,
+    var(--ink) 60%,
+    var(--ink) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer 2.5s ease-in-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-shimmer {
+    animation: none;
+    -webkit-text-fill-color: var(--ink);
+    background: none;
+  }
+}
+
+/* ---------- Video poster breathing glow ---------- */
+
+@keyframes play-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(246, 241, 231, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 24px 4px rgba(177, 133, 76, 0.25);
+  }
+}
+
+.video-invite__play {
+  animation: play-glow 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-invite__play {
+    animation: none;
+  }
+}
+
+/* ---------- Hero text entrance ---------- */
+
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero .eyebrow {
+  animation: hero-fade-in 0.8s ease 0.2s both;
+}
+
+.hero .names {
+  animation: hero-fade-in 0.8s ease 0.4s both;
+}
+
+.hero .hero-date {
+  animation: hero-fade-in 0.8s ease 0.6s both;
+}
+
+.hero .hero-place {
+  animation: hero-fade-in 0.8s ease 0.7s both;
+}
+
+.hero .countdown {
+  animation: hero-fade-in 0.8s ease 0.9s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .eyebrow,
+  .hero .names,
+  .hero .hero-date,
+  .hero .hero-place,
+  .hero .countdown {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- RSVP button selected state ---------- */
+
+.video-invite__answer[aria-pressed='true'] {
+  transform: scale(1.02);
+}
+
+.video-invite__answer:not([aria-pressed='true']):hover {
+  border-color: var(--gold);
+  color: var(--gold);
 }

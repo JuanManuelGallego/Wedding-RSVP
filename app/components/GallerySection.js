@@ -14,7 +14,7 @@ export default function GallerySection({ locale }) {
         <h2 className="section-title">{t(locale, 'galleryTitle')}</h2>
         <div className="gallery-grid">
           {photos.map((src) => (
-            <img key={src} className="gallery-photo" src={src} alt="" loading="lazy" />
+            <img key={src} className="gallery-photo" src={src} alt="" loading="lazy" width="400" height="500" />
           ))}
         </div>
       </div>

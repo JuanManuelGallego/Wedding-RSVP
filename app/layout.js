@@ -7,6 +7,10 @@ export const metadata = {
   description: `You're invited. ${site.names} — June 6, 2027.`,
 };
 
+export const viewport = {
+  themeColor: '#f6f1e7',
+};
+
 export default function RootLayout({ children }) {
   const locale = getLocale();
 

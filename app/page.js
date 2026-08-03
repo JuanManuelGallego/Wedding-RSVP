@@ -5,6 +5,8 @@ import LanguageToggle from './components/LanguageToggle';
 import TheDay from './components/TheDay';
 import StorySection from './components/StorySection';
 import GallerySection from './components/GallerySection';
+import Countdown from './components/Countdown';
+import ScrollReveal from './components/ScrollReveal';
 
 export default function Home({ searchParams }) {
   const locale = resolveLocale({ cookie: getLocale(), param: searchParams?.lang });
@@ -18,23 +20,32 @@ export default function Home({ searchParams }) {
         <div className="wrap">
           <p className="eyebrow">{t(locale, 'eyebrow')}</p>
           <h1 className="names">
-            {site.first} <em>&</em> {site.second}
+            {site.first} <em>&amp;</em> {site.second}
           </h1>
           <p className="hero-date">{t(locale, 'date')}</p>
           <p className="hero-place">{t(locale, 'place')}</p>
+          <Countdown locale={locale} />
         </div>
       </section>
 
-      <TheDay locale={locale} />
-      <StorySection locale={locale} />
-      <GallerySection locale={locale} />
+      <ScrollReveal>
+        <TheDay locale={locale} />
+      </ScrollReveal>
+      <ScrollReveal>
+        <StorySection locale={locale} />
+      </ScrollReveal>
+      <ScrollReveal>
+        <GallerySection locale={locale} />
+      </ScrollReveal>
 
-      <section>
-        <div className="wrap" style={{ textAlign: 'center' }}>
-          <h2 className="section-title">{t(locale, 'rsvpTitle')}</h2>
-          <p>{t(locale, 'rsvpNote')}</p>
-        </div>
-      </section>
+      <ScrollReveal>
+        <section>
+          <div className="wrap" style={{ textAlign: 'center' }}>
+            <h2 className="section-title">{t(locale, 'rsvpTitle')}</h2>
+            <p>{t(locale, 'rsvpNote')}</p>
+          </div>
+        </section>
+      </ScrollReveal>
 
       <footer>
         <p>{t(locale, 'footer')}</p>

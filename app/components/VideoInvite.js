@@ -97,7 +97,7 @@ export default function VideoInvite({ guest, locale }) {
 
             {status === 'done' ? (
               <div className="confirmation">
-                <p className="confirmation-mark">&</p>
+                <p className="confirmation-mark gold-shimmer">&amp;</p>
                 <p>{attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}</p>
                 <button
                   className="edit-response-btn"
