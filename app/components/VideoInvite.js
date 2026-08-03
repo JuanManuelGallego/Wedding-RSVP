@@ -5,8 +5,9 @@ import { supabase } from '../../lib/supabaseClient';
 import { t } from '../../lib/i18n';
 
 export default function VideoInvite({ guest, locale }) {
+  const isReturningGuest = guest.attending !== null;
   const videoRef = useRef(null);
-  const [phase, setPhase] = useState('poster'); // poster | playing | fading | buttons
+  const [phase, setPhase] = useState(isReturningGuest ? 'buttons' : 'poster'); // poster | playing | fading | buttons
   const [attending, setAttending] = useState(guest.attending);
   const [status, setStatus] = useState('idle'); // idle | submitting | done | error
 
@@ -98,8 +99,8 @@ export default function VideoInvite({ guest, locale }) {
             <p className="eyebrow">{t(locale, 'attendingLabel')}</p>
             {status === 'done' ? (
               <div className="confirmation">
-                <p>{attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}</p>
-                <p>{attending && t(locale, 'realInvite')}</p><button
+                <p className="eyebrow">{attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}</p>
+                <p className="eyebrow">{attending && t(locale, 'realInvite')}</p><button
                   className="edit-response-btn"
                   type="button"
                   onClick={() => setStatus('idle')}
@@ -109,6 +110,11 @@ export default function VideoInvite({ guest, locale }) {
               </div>
             ) : (
               <>
+                {isReturningGuest && status === 'idle' && (
+                  <p className="already-responded-note">
+                    {attending ? t(locale, 'alreadyRespondedYes') : t(locale, 'alreadyRespondedNo')}
+                  </p>
+                )}
                 <div className="video-invite__buttons" role="group" aria-label="Attendance">
                   <button
                     className="video-invite__answer video-invite__answer--yes"
