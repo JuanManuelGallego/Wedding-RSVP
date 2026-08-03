@@ -39,6 +39,7 @@ export type GuestInsert = {
   party_size: number;
   whatsapp: string | null;
   slug: string;
+  lang: Locale;
 };
 
 export type GuestUpdate = {

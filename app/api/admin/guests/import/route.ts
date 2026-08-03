@@ -75,6 +75,7 @@ export const POST = withAuth(async (request: Request) => {
     const partyRaw = (r[1] || '').trim();
     const partySize = partyRaw ? parseInt(partyRaw, 10) : 1;
     const whatsapp = (r[2] || '').trim() || null;
+    const lang = (r[3] || '').trim().toLowerCase() === 'fr' ? 'fr' : 'es';
 
     if (!name) {
       skipped.push({ row: r, reason: 'Missing name' });
@@ -90,6 +91,7 @@ export const POST = withAuth(async (request: Request) => {
       party_size: partySize || 1,
       whatsapp,
       slug: makeSlug(name),
+      lang,
     });
   }
 

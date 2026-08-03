@@ -26,6 +26,7 @@ export const POST = withAuth(async (request: Request) => {
       party_size,
       whatsapp: whatsapp ? String(whatsapp).trim() || null : null,
       slug,
+      lang: 'es',
     })
     .select()
     .single();

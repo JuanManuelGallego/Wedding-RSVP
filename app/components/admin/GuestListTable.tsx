@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import EditGuestForm from './EditGuestForm';
 import { useGuestMutations } from './hooks/useGuestMutations';
 import type { Guest } from '@/lib/types';
@@ -70,6 +71,7 @@ export default function GuestListTable({
   const [page, setPage] = useState(1);
   const [editingId, setEditingId] = useState<string | null>(null);
   const { savingId, error, updateGuest } = useGuestMutations();
+  const router = useRouter();
 
   const filtered = useMemo(() => {
     return guests.filter(
@@ -179,6 +181,9 @@ export default function GuestListTable({
         </select>
         <button type="button" className="csv-btn" onClick={exportCsv}>
           Export CSV
+        </button>
+        <button type="button" className="csv-btn" onClick={() => router.refresh()}>
+          Refresh
         </button>
       </div>
 
