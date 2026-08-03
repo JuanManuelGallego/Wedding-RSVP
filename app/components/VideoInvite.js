@@ -31,7 +31,7 @@ export default function VideoInvite({ guest, locale }) {
   function fadeOut() {
     if (phase === 'fading') return;
     setPhase('fading');
-    window.setTimeout(() => setPhase('buttons'), 950);
+    window.setTimeout(() => setPhase('buttons'), 650);
   }
 
   async function answer(value) {
@@ -71,6 +71,9 @@ export default function VideoInvite({ guest, locale }) {
         <div className="video-invite__poster">
           <p className="eyebrow">{t(locale, 'invitedEyebrow')}</p>
           <p className="video-invite__name">{guest.display_name}</p>
+          <div className="video-invite__ornament">
+            <span className="video-invite__ornament-diamond" />
+          </div>
           <button
             className="video-invite__play"
             type="button"
@@ -92,7 +95,7 @@ export default function VideoInvite({ guest, locale }) {
       {phase === 'buttons' && (
         <div className="video-invite__content">
           <div className="video-invite__inner">
-            <p className="eyebrow">{t(locale, 'invitedEyebrow')}</p>
+            <p className="eyebrow">{t(locale, 'attendingLabel')}</p>
             <p className="video-invite__name">{guest.display_name}</p>
 
             {status === 'done' ? (
@@ -111,7 +114,7 @@ export default function VideoInvite({ guest, locale }) {
               <>
                 <div className="video-invite__buttons" role="group" aria-label="Attendance">
                   <button
-                    className="video-invite__answer"
+                    className="video-invite__answer video-invite__answer--yes"
                     type="button"
                     aria-pressed={attending === true}
                     onClick={() => answer(true)}
