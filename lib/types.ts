@@ -1,7 +1,7 @@
 export type Locale = 'es' | 'fr';
 
 export enum VideoPhase {
-  Poster = 'poster',
+  Envelope = 'envelope',
   Playing = 'playing',
   Ended = 'ended',
   Done = 'done',

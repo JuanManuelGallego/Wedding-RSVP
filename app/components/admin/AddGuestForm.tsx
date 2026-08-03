@@ -83,7 +83,7 @@ export default function AddGuestForm() {
             type="tel"
             value={whatsapp}
             onChange={(e) => setWhatsapp(e.target.value)}
-            placeholder="+57 ..."
+            placeholder="+57 300 123 4567"
           />
         </div>
         <button className="submit-btn" type="submit" disabled={status === FormStatus.Submitting}>

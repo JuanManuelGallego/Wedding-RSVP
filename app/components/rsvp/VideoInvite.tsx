@@ -10,13 +10,15 @@ import type { Guest, Locale } from '@/lib/types';
 export default function VideoInvite({ guest, locale }: { guest: Guest; locale: Locale }) {
   const isReturningGuest = guest.attending !== null;
   const videoRef = useRef<HTMLVideoElement>(null);
+  const envelopeRef = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<VideoPhase>(
-    isReturningGuest ? VideoPhase.Done : VideoPhase.Poster
+    isReturningGuest ? VideoPhase.Done : VideoPhase.Envelope
   );
   const [attending, setAttending] = useState<boolean | null>(guest.attending);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(SubmitStatus.Idle);
   const [isBuffering, setIsBuffering] = useState(false);
   const [jumpToEnd, setJumpToEnd] = useState(false);
+  const [envelopeStage, setEnvelopeStage] = useState<'idle' | 'opening' | 'sliding'>('idle');
 
   useEffect(() => {
     const video = videoRef.current;
@@ -32,7 +34,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
   useEffect(() => {
     if (phase === VideoPhase.Playing) {
       const video = videoRef.current;
-      if (video) {
+      if (video && video.paused) {
         video.currentTime = 0;
         video.play()?.catch(() => setPhase(VideoPhase.Ended));
       }
@@ -53,10 +55,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
       const video = videoRef.current;
       if (!video) return;
 
-      if (phase === VideoPhase.Poster) {
-        e.preventDefault();
-        setPhase(VideoPhase.Playing);
-      } else if (phase === VideoPhase.Playing && !video.paused) {
+      if (phase === VideoPhase.Playing && !video.paused) {
         e.preventDefault();
         video.pause();
       } else if (phase === VideoPhase.Playing && video.paused) {
@@ -69,7 +68,21 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [phase]);
 
-  function startVideo() {
+  function openEnvelope() {
+    if (envelopeStage !== 'idle') return;
+    setEnvelopeStage('opening');
+  }
+
+  function onFlapAnimationEnd() {
+    setEnvelopeStage('sliding');
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = 0;
+      video.play()?.catch(() => {});
+    }
+  }
+
+  function onVideoSlideEnd() {
     setPhase(VideoPhase.Playing);
   }
 
@@ -129,27 +142,142 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
         </>
       )}
 
-      {phase === VideoPhase.Poster && (
-        <div className="video-invite__poster">
-          {guest.party_size === 1 ? (
-            <p className="eyebrow">{t(locale, 'invitedEyebrow')}</p>
-          ) : (
-            <p className="eyebrow">{t(locale, 'invitedEyebrowParty')}</p>
-          )}
-          <p className="video-invite__name">{guest.display_name}</p>
-          <div className="video-invite__ornament">
-            <span className="video-invite__ornament-diamond" />
-          </div>
-          <button
-            className="video-invite__play"
-            type="button"
-            aria-label={t(locale, 'play')}
-            onClick={startVideo}
+      {phase === VideoPhase.Envelope && (
+        <div
+          ref={envelopeRef}
+          className={`video-invite__envelope${envelopeStage !== 'idle' ? ' video-invite__envelope--' + envelopeStage : ''}`}
+          onClick={openEnvelope}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openEnvelope();
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label={t(locale, 'play')}
+        >
+          <video
+            ref={videoRef}
+            className="video-invite__envelope-video"
+            src={VIDEO_SRC}
+            preload="auto"
+            playsInline
+            onEnded={onEnded}
+            onError={() => setPhase(VideoPhase.Ended)}
+            onWaiting={() => setIsBuffering(true)}
+            onPlaying={() => setIsBuffering(false)}
+            onAnimationEnd={onVideoSlideEnd}
+          />
+
+          <svg
+            className="video-invite__envelope-svg"
+            viewBox="0 0 400 280"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
           >
-            <span className="video-invite__play-triangle" />
-          </button>
-          <p className="video-invite__play-label">{t(locale, 'play')}</p>
+            <defs>
+              <linearGradient id="envelopeBody" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#f6f1e7" />
+                <stop offset="100%" stopColor="#ebe4d4" />
+              </linearGradient>
+              <filter id="envelopeShadow" x="-20%" y="-10%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="4" stdDeviation="12" floodColor="#16233f" floodOpacity="0.25" />
+              </filter>
+            </defs>
+
+            <g filter="url(#envelopeShadow)">
+              <rect x="8" y="60" width="384" height="212" rx="6" fill="url(#envelopeBody)" stroke="#b1854c" strokeWidth="1.2" />
+
+              <path
+                className="video-invite__envelope-flap"
+                d="M8 60 L200 170 L392 60"
+                fill="#ebe4d4"
+                stroke="#b1854c"
+                strokeWidth="1.2"
+                strokeLinejoin="round"
+                onAnimationEnd={onFlapAnimationEnd}
+              />
+
+              <path
+                d="M8 272 L140 170"
+                stroke="#b1854c"
+                strokeWidth="0.8"
+                opacity="0.4"
+              />
+              <path
+                d="M392 272 L260 170"
+                stroke="#b1854c"
+                strokeWidth="0.8"
+                opacity="0.4"
+              />
+            </g>
+
+            <circle
+              className="video-invite__envelope-seal"
+              cx="200"
+              cy="165"
+              r="18"
+              fill="#b1854c"
+              stroke="#9a7340"
+              strokeWidth="1"
+            />
+            <text
+              x="200"
+              y="170"
+              textAnchor="middle"
+              fill="#f6f1e7"
+              fontSize="16"
+              fontFamily="'Fraunces', serif"
+              fontWeight="500"
+            >
+              M
+            </text>
+
+            <text
+              className="video-invite__envelope-name"
+              x="200"
+              y="220"
+              textAnchor="middle"
+              fill="#16233f"
+              fontSize="22"
+              fontFamily="'Fraunces', serif"
+              fontWeight="500"
+            >
+              {guest.display_name}
+            </text>
+          </svg>
+
+          <p className="video-invite__envelope-hint">{t(locale, 'play')}</p>
         </div>
+      )}
+
+      {(phase === VideoPhase.Playing || phase === VideoPhase.Ended) && (
+        <>
+          <video
+            ref={phase === VideoPhase.Playing || phase === VideoPhase.Ended ? videoRef : undefined}
+            className="video-invite__video"
+            src={VIDEO_SRC}
+            preload="auto"
+            playsInline
+            onEnded={onEnded}
+            onError={() => setPhase(VideoPhase.Ended)}
+            onWaiting={() => setIsBuffering(true)}
+            onPlaying={() => setIsBuffering(false)}
+            onLoadedMetadata={() => {
+              if (jumpToEnd && videoRef.current) {
+                videoRef.current.currentTime = videoRef.current.duration;
+                setJumpToEnd(false);
+              }
+            }}
+          />
+          {isBuffering && phase === VideoPhase.Playing && (
+            <div className="video-invite__poster" style={{ background: 'transparent' }}>
+              <div className="video-invite__buffering" />
+            </div>
+          )}
+        </>
       )}
 
       {phase === VideoPhase.Ended && (
@@ -181,7 +309,8 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
             className="video-invite__replay-btn"
             type="button"
             onClick={() => {
-              setPhase(VideoPhase.Playing);
+              setEnvelopeStage('idle');
+              setPhase(VideoPhase.Envelope);
             }}
           >
             {t(locale, 'replay')}
@@ -213,7 +342,10 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
             <button
               className="video-invite__done-btn"
               type="button"
-              onClick={() => setPhase(VideoPhase.Poster)}
+              onClick={() => {
+                setEnvelopeStage('idle');
+                setPhase(VideoPhase.Envelope);
+              }}
             >
               {t(locale, 'replay')}
             </button>

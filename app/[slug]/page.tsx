@@ -11,9 +11,10 @@ export default async function VideoInvitePage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams?: Record<string, string | undefined>;
+  searchParams?: Promise<Record<string, string | undefined>>;
 }) {
   const { slug } = await params;
+  const sp = searchParams ? await searchParams : undefined;
   const supabaseAdmin = createAdminClient();
 
   const { data: guest } = await supabaseAdmin
@@ -24,7 +25,7 @@ export default async function VideoInvitePage({
 
   const locale = resolveLocale({
     cookie: await getLocale(),
-    param: searchParams?.lang,
+    param: sp?.lang,
     fallback: guest?.lang,
   });
 
