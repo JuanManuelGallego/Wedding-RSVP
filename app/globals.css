@@ -637,7 +637,7 @@ footer {
   position: fixed;
   inset: 0;
   z-index: 20;
-  background: #000;
+  background: #0A0E19;
   transition: background 0.6s ease;
 }
 
@@ -651,7 +651,7 @@ footer {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #000;
+  background: #0A0E19;
   opacity: 1;
   transition: opacity 0.6s ease;
 }
@@ -665,6 +665,7 @@ footer {
   justify-content: center;
   text-align: center;
   padding: 24px;
+  background: #0A0E19;
   transition: opacity 0.6s ease;
 }
 
@@ -701,9 +702,9 @@ footer {
 .video-invite__ornament::after {
   content: '';
   width: clamp(32px, 10vw, 48px);
-  height: 0.5px;
+  height: 1px;
   background: var(--gold);
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 .video-invite__ornament-diamond {
@@ -711,15 +712,15 @@ footer {
   height: clamp(5px, 1.5vw, 6px);
   background: var(--gold);
   transform: rotate(45deg);
-  opacity: 0.6;
+  opacity: 1;
 }
 
 .video-invite__play {
   width: clamp(64px, 18vw, 88px);
   height: clamp(64px, 18vw, 88px);
   border-radius: 50%;
-  border: 0.5px solid rgba(246, 241, 231, 0.5);
-  background: rgba(246, 241, 231, 0.06);
+  border: 1px solid rgba(246, 241, 231, 0.7);
+  background: rgba(246, 241, 231, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -728,7 +729,7 @@ footer {
 }
 
 .video-invite__play:hover {
-  background: rgba(246, 241, 231, 0.16);
+  background: rgba(246, 241, 231, 0.2);
   transform: scale(1.04);
 }
 
@@ -750,8 +751,8 @@ footer {
   font-size: 13px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--lavender);
-  opacity: 0.8;
+  color: var(--parchment);
+  opacity: 0.9;
 }
 
 .video-invite__skip {
@@ -759,8 +760,8 @@ footer {
   bottom: 24px;
   right: 24px;
   z-index: 5;
-  border: 0.5px solid rgba(246, 241, 231, 0.35);
-  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(246, 241, 231, 0.5);
+  background: rgba(22, 35, 63, 0.5);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   color: var(--parchment);
@@ -816,7 +817,7 @@ footer {
   font-family: var(--body);
   font-size: 17px;
   letter-spacing: 0.04em;
-  border: 1px solid var(--line);
+  border: 1.5px solid rgba(22, 35, 63, 0.25);
   background: #fff;
   color: var(--ink);
   border-radius: 8px;
@@ -830,15 +831,15 @@ footer {
 }
 
 .video-invite__answer--yes[aria-pressed='true'] {
-  background: rgba(124, 139, 111, 0.15);
+  background: rgba(124, 139, 111, 0.25);
   border-color: var(--sage);
-  color: var(--sage);
+  color: #4a5a3d;
 }
 
 .video-invite__answer--no[aria-pressed='true'] {
-  background: rgba(184, 169, 201, 0.15);
+  background: rgba(184, 169, 201, 0.25);
   border-color: var(--lavender);
-  color: var(--lavender);
+  color: #6b5a7e;
 }
 
 .video-invite__buttons + .form-note,

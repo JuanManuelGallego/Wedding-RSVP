@@ -96,13 +96,10 @@ export default function VideoInvite({ guest, locale }) {
         <div className="video-invite__content">
           <div className="video-invite__inner">
             <p className="eyebrow">{t(locale, 'attendingLabel')}</p>
-            <p className="video-invite__name">{guest.display_name}</p>
-
             {status === 'done' ? (
               <div className="confirmation">
-                <p className="confirmation-mark gold-shimmer">&amp;</p>
                 <p>{attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}</p>
-                <button
+                <p>{attending && t(locale, 'realInvite')}</p><button
                   className="edit-response-btn"
                   type="button"
                   onClick={() => setStatus('idle')}
