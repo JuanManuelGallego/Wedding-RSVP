@@ -630,6 +630,22 @@ footer {
   object-fit: cover;
   display: block;
   border-radius: 4px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.gallery-photo:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(22, 35, 63, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-photo {
+    transition: none;
+  }
+  .gallery-photo:hover {
+    transform: none;
+  }
 }
 
 /* ---------- Video invite ---------- */
@@ -875,27 +891,6 @@ footer {
   color: var(--gold);
   opacity: 0.6;
   margin-top: -16px;
-}
-
-/* ---------- Gallery hover ---------- */
-
-.gallery-photo {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.gallery-photo:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 24px rgba(22, 35, 63, 0.12);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .gallery-photo {
-    transition: none;
-  }
-  .gallery-photo:hover {
-    transform: none;
-  }
 }
 
 /* ---------- Gold shimmer (RSVP confirmation) ---------- */

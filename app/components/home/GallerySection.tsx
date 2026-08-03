@@ -1,0 +1,32 @@
+import { t } from '../../../lib/i18n';
+import type { Locale } from '../../../lib/types';
+
+const PHOTO_COUNT = 12;
+
+export default function GallerySection({ locale }: { locale: Locale }) {
+  const photos = Array.from(
+    { length: PHOTO_COUNT },
+    (_, i) => `/photo-${String(i + 1).padStart(2, '0')}.jpg`
+  );
+
+  return (
+    <section>
+      <div className="wrap">
+        <h2 className="section-title">{t(locale, 'galleryTitle')}</h2>
+        <div className="gallery-grid">
+          {photos.map((src) => (
+            <img
+              key={src}
+              className="gallery-photo"
+              src={src}
+              alt=""
+              loading="lazy"
+              width={400}
+              height={500}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
