@@ -16,6 +16,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
   );
   const [attending, setAttending] = useState<boolean | null>(guest.attending);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(SubmitStatus.Idle);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const [jumpToEnd, setJumpToEnd] = useState(false);
   const [envelopeStage, setEnvelopeStage] = useState<'idle' | 'opening' | 'sliding'>('idle');
@@ -108,6 +109,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
       }
 
       setSubmitStatus(SubmitStatus.Idle);
+      setHasSubmitted(true);
       setPhase(VideoPhase.Done);
     },
     [submitStatus, guest.id]
@@ -115,28 +117,30 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
 
   return (
     <div className="video-invite">
-      <video
-        ref={videoRef}
-        className={
-          phase === VideoPhase.Envelope
-            ? `video-invite__envelope-video${envelopeStage === 'sliding' ? ' video-invite__envelope-video--sliding' : ''}`
-            : 'video-invite__video'
-        }
-        src={VIDEO_SRC}
-        preload="auto"
-        playsInline
-        onEnded={onEnded}
-        onError={() => setPhase(VideoPhase.Ended)}
-        onWaiting={() => setIsBuffering(true)}
-        onPlaying={() => setIsBuffering(false)}
-        onLoadedMetadata={() => {
-          if (jumpToEnd && videoRef.current) {
-            videoRef.current.currentTime = videoRef.current.duration;
-            setJumpToEnd(false);
+      {phase !== VideoPhase.Done && (
+        <video
+          ref={videoRef}
+          className={
+            phase === VideoPhase.Envelope
+              ? `video-invite__envelope-video${envelopeStage === 'sliding' ? ' video-invite__envelope-video--sliding' : ''}`
+              : 'video-invite__video'
           }
-        }}
-        onAnimationEnd={phase === VideoPhase.Envelope ? onVideoSlideEnd : undefined}
-      />
+          src={VIDEO_SRC}
+          preload="auto"
+          playsInline
+          onEnded={onEnded}
+          onError={() => setPhase(VideoPhase.Ended)}
+          onWaiting={() => setIsBuffering(true)}
+          onPlaying={() => setIsBuffering(false)}
+          onLoadedMetadata={() => {
+            if (jumpToEnd && videoRef.current) {
+              videoRef.current.currentTime = videoRef.current.duration;
+              setJumpToEnd(false);
+            }
+          }}
+          onAnimationEnd={phase === VideoPhase.Envelope ? onVideoSlideEnd : undefined}
+        />
+      )}
 
       {isBuffering && phase === VideoPhase.Playing && (
         <div className="video-invite__poster" style={{ background: 'transparent' }}>
@@ -217,11 +221,9 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
               y="170"
               textAnchor="middle"
               fill="#f6f1e7"
-              fontSize="16"
-              fontFamily="'Fraunces', serif"
-              fontWeight="500"
+              fontSize="14"
             >
-              M
+              M&J
             </text>
 
             <text
@@ -231,8 +233,8 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
               textAnchor="middle"
               fill="#16233f"
               fontSize="22"
-              fontFamily="'Fraunces', serif"
-              fontWeight="500"
+              fontFamily="'Great Vibes', cursive"
+              fontWeight="400"
             >
               {guest.display_name}
             </text>
@@ -296,9 +298,17 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
         <div className="video-invite__confirm-overlay">
           <div className="video-invite__confirmation">
             <p className="eyebrow">
-              {attending ? t(locale, 'confirmYes') : t(locale, 'confirmNo')}
+              {hasSubmitted
+                ? attending
+                  ? t(locale, 'confirmYes')
+                  : t(locale, 'confirmNo')
+                : attending
+                  ? t(locale, 'alreadyRespondedYes')
+                  : t(locale, 'alreadyRespondedNo')}
             </p>
-            {attending && <p className="eyebrow">{t(locale, 'realInvite')}</p>}
+            {hasSubmitted && attending && (
+              <p className="eyebrow">{t(locale, 'realInvite')}</p>
+            )}
           </div>
           <div className="video-invite__done-actions">
             <button

@@ -23,8 +23,10 @@ export default async function AdminPage() {
     .order('created_at', { ascending: false });
 
   const responded = (guests ?? []).filter((g: Guest) => g.attending !== null);
+  const viewed = (guests ?? []).filter((g: Guest) => g.viewed_at !== null);
   const totalInvited = guests?.length ?? 0;
   const respondedCount = responded.length;
+  const viewedCount = viewed.length;
   const attendingHeadcount = responded
     .filter((g: Guest) => g.attending)
     .reduce((sum: number, g: Guest) => sum + (g.party_size ?? 0), 0);
@@ -54,6 +56,10 @@ export default async function AdminPage() {
         <div>
           <strong>{respondedCount}</strong>
           <span>responded</span>
+        </div>
+        <div>
+          <strong>{viewedCount}</strong>
+          <span>viewed link</span>
         </div>
         <div>
           <strong>{attendingHeadcount}</strong>

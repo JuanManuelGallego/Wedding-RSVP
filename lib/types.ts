@@ -31,6 +31,7 @@ export type Guest = {
   lang: Locale;
   attending: boolean | null;
   responded_at: string | null;
+  viewed_at: string | null;
 };
 
 export type GuestInsert = {
@@ -48,6 +49,7 @@ export type GuestUpdate = {
   lang?: Locale;
   attending?: boolean | null;
   responded_at?: string | null;
+  viewed_at?: string | null;
 };
 
 export type Database = {

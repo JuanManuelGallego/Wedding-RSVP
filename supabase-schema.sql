@@ -12,7 +12,8 @@ create table if not exists guests (
   invite_sent boolean not null default false, -- admin-only: link sent to guest?
   lang text not null default 'es',      -- admin-only: guest's invite language (es|fr)
   attending boolean,                 -- null = hasn't responded yet
-  responded_at timestamp with time zone
+  responded_at timestamp with time zone,
+  viewed_at timestamp with time zone  -- when the guest first opened their link
 );
 
 -- For installs that created the table before invite_sent existed.
@@ -20,6 +21,9 @@ alter table guests add column if not exists invite_sent boolean not null default
 
 -- For installs that created the table before lang existed.
 alter table guests add column if not exists lang text not null default 'es';
+
+-- For installs that created the table before viewed_at existed.
+alter table guests add column if not exists viewed_at timestamp with time zone;
 
 -- Lock the table down by default. Guest lookups and admin reads happen only
 -- through the server using the service role key, which bypasses RLS.

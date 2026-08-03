@@ -23,6 +23,14 @@ export default async function VideoInvitePage({
     .eq('slug', slug)
     .single();
 
+  if (guest && !guest.viewed_at) {
+    await supabaseAdmin
+      .from('guests')
+      .update({ viewed_at: new Date().toISOString() })
+      .eq('id', guest.id);
+    guest.viewed_at = new Date().toISOString();
+  }
+
   const locale = resolveLocale({
     cookie: await getLocale(),
     param: sp?.lang,

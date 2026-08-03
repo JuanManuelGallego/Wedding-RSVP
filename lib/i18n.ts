@@ -32,7 +32,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     hm: 'Ups',
     notFound:
       'No pudimos encontrar una invitación en este enlace. Por favor, verifica el enlace.',
-    play: 'Tocar para reproducir',
+    play: 'Tocar para abrir',
     skip: 'Saltar',
     replay: 'Volver a ver el video',
     updateNote: 'Actualiza tu respuesta a continuación.',
@@ -43,7 +43,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     sendBtn: 'Enviar RSVP',
     updateBtn: 'Actualizar RSVP',
     sending: 'Enviando…',
-    confirmYes: '¡Gracias! No podemos esperar para celebrar contigo.',
+    confirmYes: '¡Gracias! Estamos felices de poder celebrar contigo.',
     confirmNo: 'Gracias por avisarnos. Te extrañaremos.',
     changeResponse: 'Cambiar mi respuesta',
     alreadyRespondedYes: 'Ya confirmaste tu asistencia.',

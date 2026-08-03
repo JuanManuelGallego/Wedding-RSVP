@@ -34,6 +34,7 @@ export default function GuestLinksTable({
             <th>Party size</th>
             <th>WhatsApp</th>
             <th>Sent</th>
+            <th>Viewed</th>
             <th>Lang</th>
             <th>Link</th>
             <th></th>
@@ -56,6 +57,9 @@ export default function GuestLinksTable({
                     onChange={() => toggleSent(g)}
                     aria-label={`Invitation sent to ${g.display_name}`}
                   />
+                </td>
+                <td title={g.viewed_at ? new Date(g.viewed_at).toLocaleString() : 'Not yet'}>
+                  {g.viewed_at ? '\u2713' : '\u2014'}
                 </td>
                 <td>
                   <select
@@ -88,7 +92,7 @@ export default function GuestLinksTable({
           )}
           {guests.length === 0 && (
             <tr>
-              <td colSpan={7}>No guests added yet.</td>
+              <td colSpan={8}>No guests added yet.</td>
             </tr>
           )}
         </tbody>
