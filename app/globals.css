@@ -1047,6 +1047,10 @@ footer {
   animation: video-slide-out 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
+.video-invite__envelope-video--sliding {
+  animation: video-slide-out 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
 @keyframes video-slide-out {
   0% {
     transform: translateY(100%);
@@ -1107,6 +1111,12 @@ footer {
   }
 
   .video-invite__envelope--sliding .video-invite__envelope-video {
+    animation: none;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .video-invite__envelope-video--sliding {
     animation: none;
     transform: translateY(0);
     opacity: 1;

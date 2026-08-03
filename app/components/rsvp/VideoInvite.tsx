@@ -115,31 +115,33 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
 
   return (
     <div className="video-invite">
-      {(phase === VideoPhase.Playing || phase === VideoPhase.Ended) && (
-        <>
-          <video
-            ref={videoRef}
-            className="video-invite__video"
-            src={VIDEO_SRC}
-            preload="auto"
-            playsInline
-            onEnded={onEnded}
-            onError={() => setPhase(VideoPhase.Ended)}
-            onWaiting={() => setIsBuffering(true)}
-            onPlaying={() => setIsBuffering(false)}
-            onLoadedMetadata={() => {
-              if (jumpToEnd && videoRef.current) {
-                videoRef.current.currentTime = videoRef.current.duration;
-                setJumpToEnd(false);
-              }
-            }}
-          />
-          {isBuffering && phase === VideoPhase.Playing && (
-            <div className="video-invite__poster" style={{ background: 'transparent' }}>
-              <div className="video-invite__buffering" />
-            </div>
-          )}
-        </>
+      <video
+        ref={videoRef}
+        className={
+          phase === VideoPhase.Envelope
+            ? `video-invite__envelope-video${envelopeStage === 'sliding' ? ' video-invite__envelope-video--sliding' : ''}`
+            : 'video-invite__video'
+        }
+        src={VIDEO_SRC}
+        preload="auto"
+        playsInline
+        onEnded={onEnded}
+        onError={() => setPhase(VideoPhase.Ended)}
+        onWaiting={() => setIsBuffering(true)}
+        onPlaying={() => setIsBuffering(false)}
+        onLoadedMetadata={() => {
+          if (jumpToEnd && videoRef.current) {
+            videoRef.current.currentTime = videoRef.current.duration;
+            setJumpToEnd(false);
+          }
+        }}
+        onAnimationEnd={phase === VideoPhase.Envelope ? onVideoSlideEnd : undefined}
+      />
+
+      {isBuffering && phase === VideoPhase.Playing && (
+        <div className="video-invite__poster" style={{ background: 'transparent' }}>
+          <div className="video-invite__buffering" />
+        </div>
       )}
 
       {phase === VideoPhase.Envelope && (
@@ -157,19 +159,6 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
           tabIndex={0}
           aria-label={t(locale, 'play')}
         >
-          <video
-            ref={videoRef}
-            className="video-invite__envelope-video"
-            src={VIDEO_SRC}
-            preload="auto"
-            playsInline
-            onEnded={onEnded}
-            onError={() => setPhase(VideoPhase.Ended)}
-            onWaiting={() => setIsBuffering(true)}
-            onPlaying={() => setIsBuffering(false)}
-            onAnimationEnd={onVideoSlideEnd}
-          />
-
           <svg
             className="video-invite__envelope-svg"
             viewBox="0 0 400 280"
@@ -251,33 +240,6 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
 
           <p className="video-invite__envelope-hint">{t(locale, 'play')}</p>
         </div>
-      )}
-
-      {(phase === VideoPhase.Playing || phase === VideoPhase.Ended) && (
-        <>
-          <video
-            ref={phase === VideoPhase.Playing || phase === VideoPhase.Ended ? videoRef : undefined}
-            className="video-invite__video"
-            src={VIDEO_SRC}
-            preload="auto"
-            playsInline
-            onEnded={onEnded}
-            onError={() => setPhase(VideoPhase.Ended)}
-            onWaiting={() => setIsBuffering(true)}
-            onPlaying={() => setIsBuffering(false)}
-            onLoadedMetadata={() => {
-              if (jumpToEnd && videoRef.current) {
-                videoRef.current.currentTime = videoRef.current.duration;
-                setJumpToEnd(false);
-              }
-            }}
-          />
-          {isBuffering && phase === VideoPhase.Playing && (
-            <div className="video-invite__poster" style={{ background: 'transparent' }}>
-              <div className="video-invite__buffering" />
-            </div>
-          )}
-        </>
       )}
 
       {phase === VideoPhase.Ended && (
