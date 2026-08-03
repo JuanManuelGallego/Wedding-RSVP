@@ -70,6 +70,7 @@ export default function GuestListTable({
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const [page, setPage] = useState(1);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const { savingId, error, updateGuest } = useGuestMutations();
   const router = useRouter();
 
@@ -119,6 +120,18 @@ export default function GuestListTable({
   function sortIndicator(key: SortKey) {
     if (sortKey !== key) return null;
     return <span className="admin-sort-icon">{sortDir === 'asc' ? '\u25B2' : '\u25BC'}</span>;
+  }
+
+  async function copyInviteLink(g: Guest) {
+    const url = `${origin}/${g.slug}${g.lang === 'fr' ? '?lang=fr' : ''}`;
+    const message = `Hey ${g.display_name}, you're invited to our wedding! Here's your personal link: ${url}`;
+    try {
+      await navigator.clipboard.writeText(message);
+      setCopiedId(g.id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      // fallback
+    }
   }
 
   function exportCsv() {
@@ -200,6 +213,7 @@ export default function GuestListTable({
               {th('attending', 'Attending')}
               {th('responded_at', 'Responded')}
               <th>Link</th>
+              <th>Copy</th>
               <th></th>
             </tr>
           </thead>
@@ -211,7 +225,13 @@ export default function GuestListTable({
                 <tr key={g.id}>
                   <td>{g.display_name}</td>
                   <td>{g.party_size}</td>
-                  <td>{g.whatsapp ?? '\u2014'}</td>
+                  <td>
+                    {g.whatsapp ? (
+                      <a href={`https://wa.me/${g.whatsapp.replace(/[^0-9+]/g, '').replace(/^\+/, '')}`} target="_blank" rel="noopener noreferrer">
+                        {g.whatsapp}
+                      </a>
+                    ) : '\u2014'}
+                  </td>
                   <td>
                     <input
                       type="checkbox"
@@ -255,6 +275,15 @@ export default function GuestListTable({
                     <button
                       className="csv-btn"
                       type="button"
+                      onClick={() => copyInviteLink(g)}
+                    >
+                      {copiedId === g.id ? 'Copied!' : 'Copy'}
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="csv-btn"
+                      type="button"
                       onClick={() => setEditingId(g.id)}
                     >
                       Edit
@@ -265,7 +294,7 @@ export default function GuestListTable({
             )}
             {pageItems.length === 0 && (
               <tr>
-                <td colSpan={10}>
+                <td colSpan={11}>
                   {guests.length === 0 ? 'No guests added yet.' : 'No guests match your search.'}
                 </td>
               </tr>
