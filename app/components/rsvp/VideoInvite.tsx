@@ -232,7 +232,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
               y="220"
               textAnchor="middle"
               fill="#16233f"
-              fontSize="22"
+              fontSize="32"
               fontFamily="'Great Vibes', cursive"
               fontWeight="400"
             >
