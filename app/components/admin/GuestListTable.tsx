@@ -35,8 +35,8 @@ function matchesStatus(g: Guest, s: StatusFilter) {
 function compare(a: Guest, b: Guest, key: SortKey, dir: 'asc' | 'desc') {
   const mul = dir === 'asc' ? 1 : -1;
 
-  const aVal = a[key];
-  const bVal = b[key];
+  const aVal = a[ key ];
+  const bVal = b[ key ];
 
   if (aVal == null && bVal == null) return 0;
   if (aVal == null) return 1;
@@ -64,13 +64,13 @@ export default function GuestListTable({
   guests: Guest[];
   origin: string;
 }) {
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [sortKey, setSortKey] = useState<SortKey>('display_name');
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
-  const [page, setPage] = useState(1);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [ search, setSearch ] = useState('');
+  const [ statusFilter, setStatusFilter ] = useState<StatusFilter>('all');
+  const [ sortKey, setSortKey ] = useState<SortKey>('display_name');
+  const [ sortDir, setSortDir ] = useState<'asc' | 'desc'>('asc');
+  const [ page, setPage ] = useState(1);
+  const [ editingId, setEditingId ] = useState<string | null>(null);
+  const [ copiedId, setCopiedId ] = useState<string | null>(null);
   const { savingId, error, updateGuest } = useGuestMutations();
   const router = useRouter();
 
@@ -78,11 +78,11 @@ export default function GuestListTable({
     return guests.filter(
       (g) => matchesSearch(g, search) && matchesStatus(g, statusFilter)
     );
-  }, [guests, search, statusFilter]);
+  }, [ guests, search, statusFilter ]);
 
   const sorted = useMemo(() => {
-    return [...filtered].sort((a, b) => compare(a, b, sortKey, sortDir));
-  }, [filtered, sortKey, sortDir]);
+    return [ ...filtered ].sort((a, b) => compare(a, b, sortKey, sortDir));
+  }, [ filtered, sortKey, sortDir ]);
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / PER_PAGE));
   const safePage = Math.min(page, totalPages);
@@ -124,7 +124,13 @@ export default function GuestListTable({
 
   async function copyInviteLink(g: Guest) {
     const url = `${origin}/${g.slug}${g.lang === 'fr' ? '?lang=fr' : ''}`;
-    const message = `Hey ${g.display_name}, you're invited to our wedding! Here's your personal link: ${url}`;
+    const isPlural = g.party_size > 1;
+    const message =
+      g.lang === 'fr'
+        ? `💍✨ Nous nous marions ! ✨💍\n\nNous voulons partager avec vous une date très spéciale, car nous espérons que vous pourrez nous accompagner lors de l’un des jours les plus importants de notre vie.\nGardez cette date en tête, car nous préparons une journée remplie d’amour, de célébration et de nombreuses émotions. 🤍\n\nVeuillez confirmer votre présence via le lien :\n${url}\n\nVotre confirmation est très importante pour nous. 🥂✨\n\nManu & Juanma`
+        : isPlural
+          ? `💍✨ ¡Nos casamos! ✨💍\n\nQueremos compartir con ustedes una fecha muy especial, porque esperamos que puedan acompañarnos en uno de los días más importantes de nuestras vidas.\nGuarda la fecha, porque se viene un día lleno de amor, celebración y muchas emociones. 🤍\n\nPor favor, confirmen su asistencia a través del link:\n${url}\n\nSu confirmación es muy importante para nosotros. 🥂✨\n\nManu & Juanma`
+          : `💍✨ ¡Nos casamos! ✨💍\n\nQueremos compartir contigo una fecha muy especial, porque esperamos que puedas acompañarnos en uno de los días más importantes de nuestras vidas.\nGuarda la fecha, porque se viene un día lleno de amor, celebración y muchas emociones. 🤍\n\nPor favor, confirma tu asistencia a través del link:\n${url}\n\nTu confirmación es muy importante para nosotros. 🥂✨\n\nManu & Juanma`;
     try {
       await navigator.clipboard.writeText(message);
       setCopiedId(g.id);
@@ -135,7 +141,7 @@ export default function GuestListTable({
   }
 
   function exportCsv() {
-    const header = ['Name', 'Party Size', 'WhatsApp', 'Sent', 'Viewed', 'Lang', 'Attending', 'Responded', 'Link'];
+    const header = [ 'Name', 'Party Size', 'WhatsApp', 'Sent', 'Viewed', 'Lang', 'Attending', 'Responded', 'Link' ];
     const rows = sorted.map((g) => [
       g.display_name,
       String(g.party_size),
@@ -148,11 +154,11 @@ export default function GuestListTable({
       `${origin}/${g.slug}${g.lang === 'fr' ? '?lang=fr' : ''}`,
     ]);
 
-    const csv = [header, ...rows]
+    const csv = [ header, ...rows ]
       .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(','))
       .join('\n');
 
-    const blob = new Blob([csv], { type: 'text/csv' });
+    const blob = new Blob([ csv ], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -314,7 +320,7 @@ export default function GuestListTable({
             Prev
           </button>
           <span className="admin-pagination-info">
-            Showing {start + 1}-{Math.min(start + PER_PAGE, sorted.length)} of {sorted.length} guests
+            Showing {start + 1}-{Math.min(start + PER_PAGE, sorted.length)} of {sorted.length} invites
           </span>
           <button
             type="button"

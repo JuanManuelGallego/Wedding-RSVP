@@ -7,19 +7,44 @@ import { VIDEO_SRC } from '@/lib/constants';
 import { VideoPhase, SubmitStatus } from '@/lib/types';
 import type { Guest, Locale } from '@/lib/types';
 
+export function splitNameForEnvelope(name: string): string[] {
+  const trimmedName = name.trim();
+
+  if (!trimmedName) return [ '' ];
+
+  const words = trimmedName.split(/\s+/);
+
+  if (words.length <= 1) {
+    return [ trimmedName ];
+  }
+
+  const totalLength = trimmedName.length;
+
+  if (totalLength <= 20) {
+    return [ trimmedName ];
+  }
+
+  const splitIndex = Math.max(1, Math.min(words.length - 1, Math.ceil(words.length / 2)));
+
+  return [
+    words.slice(0, splitIndex).join(' '),
+    words.slice(splitIndex).join(' '),
+  ];
+}
+
 export default function VideoInvite({ guest, locale }: { guest: Guest; locale: Locale }) {
   const isReturningGuest = guest.attending !== null;
   const videoRef = useRef<HTMLVideoElement>(null);
   const envelopeRef = useRef<HTMLDivElement>(null);
-  const [phase, setPhase] = useState<VideoPhase>(
+  const [ phase, setPhase ] = useState<VideoPhase>(
     isReturningGuest ? VideoPhase.Done : VideoPhase.Envelope
   );
-  const [attending, setAttending] = useState<boolean | null>(guest.attending);
-  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(SubmitStatus.Idle);
-  const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [isBuffering, setIsBuffering] = useState(false);
-  const [jumpToEnd, setJumpToEnd] = useState(false);
-  const [envelopeStage, setEnvelopeStage] = useState<'idle' | 'opening' | 'sliding'>('idle');
+  const [ attending, setAttending ] = useState<boolean | null>(guest.attending);
+  const [ submitStatus, setSubmitStatus ] = useState<SubmitStatus>(SubmitStatus.Idle);
+  const [ hasSubmitted, setHasSubmitted ] = useState(false);
+  const [ isBuffering, setIsBuffering ] = useState(false);
+  const [ jumpToEnd, setJumpToEnd ] = useState(false);
+  const [ envelopeStage, setEnvelopeStage ] = useState<'idle' | 'opening' | 'sliding'>('idle');
 
   useEffect(() => {
     const video = videoRef.current;
@@ -47,7 +72,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
         setJumpToEnd(false);
       }
     }
-  }, [phase, jumpToEnd]);
+  }, [ phase, jumpToEnd ]);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -67,7 +92,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [phase]);
+  }, [ phase ]);
 
   function openEnvelope() {
     if (envelopeStage !== 'idle') return;
@@ -79,7 +104,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
     const video = videoRef.current;
     if (video) {
       video.currentTime = 0;
-      video.play()?.catch(() => {});
+      video.play()?.catch(() => { });
     }
   }
 
@@ -112,8 +137,11 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
       setHasSubmitted(true);
       setPhase(VideoPhase.Done);
     },
-    [submitStatus, guest.id]
+    [ submitStatus, guest.id ]
   );
+
+  const nameLines = splitNameForEnvelope(guest.display_name);
+  const nameStartY = 230 + (nameLines.length > 1 ? -14 : 0);
 
   return (
     <div className="video-invite">
@@ -229,19 +257,28 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
             <text
               className="video-invite__envelope-name"
               x="200"
-              y="220"
+              y={nameStartY}
               textAnchor="middle"
               fill="#16233f"
               fontSize="32"
-              fontFamily="'Great Vibes', cursive"
+              fontFamily="'Cormorant Garamond'"
               fontWeight="400"
             >
-              {guest.display_name}
+              {nameLines.map((line, index) => (
+                <tspan
+                  key={`${line}-${index}`}
+                  x="200"
+                  y={nameStartY + index * 28}
+                  textAnchor="middle"
+                >
+                  {line}
+                </tspan>
+              ))}
             </text>
           </svg>
 
           <p className="video-invite__envelope-hint">{t(locale, 'play')}</p>
-          
+
           <div className="video-invite__sound-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
