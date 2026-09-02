@@ -24,7 +24,7 @@
   --charcoal: #2b2b28;
   --lavender: #b8a9c9;
   --line: rgba(22, 35, 63, 0.14);
-  --invite-bg: #6F825F;
+  --invite-bg: #D68596;
 
   --signature: 'Tempting', 'Segoe Script', cursive;
   --guest-name: 'Amsterdam Four', 'Times New Roman', serif;
@@ -1144,7 +1144,7 @@ footer {
 }
 
 .video-invite__envelope-svg {
-  width: clamp(340px, 78vw, 520px);
+  width: clamp(380px, 84vw, 620px);
   height: auto;
   overflow: visible;
 }
