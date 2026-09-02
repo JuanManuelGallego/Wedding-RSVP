@@ -127,10 +127,10 @@ export default function GuestListTable({
     const isPlural = g.party_size > 1;
     const message =
       g.lang === 'fr'
-        ? `💍✨ Nous nous marions ! ✨💍\n\nNous voulons partager avec vous une date très spéciale, car nous espérons que vous pourrez nous accompagner lors de l’un des jours les plus importants de notre vie.\nGardez cette date en tête, car nous préparons une journée remplie d’amour, de célébration et de nombreuses émotions. 🤍\n\nVeuillez confirmer votre présence via le lien :\n${url}\n\nVotre confirmation est très importante pour nous. 🥂✨\n\nManu & Juanma`
+        ? `💍 Nous nous marions!\n\nNous voulons partager avec vous l'un des jours les plus importants de nos vies et nous espérons de tout cœur que vous pourrez nous accompagner.\n\nGardez cette date en tête! Ce sera un jour rempli d'amour, de célébration et d'émotions. 🥂\n\nVeuillez confirmer votre présence via ce lien:\n${url}\n\nVotre confirmation est très importante pour nous. 🤍\n\nManu & Juanma`
         : isPlural
-          ? `💍✨ ¡Nos casamos! ✨💍\n\nQueremos compartir con ustedes una fecha muy especial, porque esperamos que puedan acompañarnos en uno de los días más importantes de nuestras vidas.\nGuarda la fecha, porque se viene un día lleno de amor, celebración y muchas emociones. 🤍\n\nPor favor, confirmen su asistencia a través del link:\n${url}\n\nSu confirmación es muy importante para nosotros. 🥂✨\n\nManu & Juanma`
-          : `💍✨ ¡Nos casamos! ✨💍\n\nQueremos compartir contigo una fecha muy especial, porque esperamos que puedas acompañarnos en uno de los días más importantes de nuestras vidas.\nGuarda la fecha, porque se viene un día lleno de amor, celebración y muchas emociones. 🤍\n\nPor favor, confirma tu asistencia a través del link:\n${url}\n\nTu confirmación es muy importante para nosotros. 🥂✨\n\nManu & Juanma`;
+          ? `💍 ¡Nos casamos!\n\nQueremos compartir con ustedes uno de los días más importantes de nuestras vidas y esperamos de corazón que puedan acompañarnos.\n\n¡Agenda esta fecha! Será un día lleno de amor, celebración y muchas emociones. 🥂\n\nPor favor, confirmen su asistencia a través de este enlace:\n${url}\n\nSu confirmación es muy importante para nosotros. 🤍\n\nManu & Juanma`
+          : `💍 ¡Nos casamos!\n\nQueremos compartir contigo uno de los días más importantes de nuestras vidas y esperamos de corazón que puedas acompañarnos.\n\n¡Agenda esta fecha! Será un día lleno de amor, celebración y muchas emociones. 🥂\n\nPor favor, confirma tu asistencia a través de este enlace:\n${url}\n\nTu confirmación es muy importante para nosotros. 🤍\n\nManu & Juanma`;
     try {
       await navigator.clipboard.writeText(message);
       setCopiedId(g.id);
