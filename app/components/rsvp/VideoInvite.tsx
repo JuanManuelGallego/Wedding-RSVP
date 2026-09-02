@@ -260,15 +260,15 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
               y={nameStartY}
               textAnchor="middle"
               fill="#16233f"
-              fontSize="32"
-              fontFamily="'Le Bistrot des Amoureux'"
+              fontSize="30"
+              fontFamily="'Tempting'"
               fontWeight="400"
             >
               {nameLines.map((line, index) => (
                 <tspan
                   key={`${line}-${index}`}
                   x="200"
-                  y={nameStartY + index * 28}
+                  y={nameStartY + index * 40}
                   textAnchor="middle"
                 >
                   {line}
