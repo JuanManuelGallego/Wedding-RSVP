@@ -1,3 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Amsterdam Four';
+  src: url('/fonts/Amsterdam.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Better Together Script';
+  src: url('/fonts/Better Together Script.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --ink: #16233f;
   --parchment: #f6f1e7;
@@ -6,9 +24,13 @@
   --charcoal: #2b2b28;
   --lavender: #b8a9c9;
   --line: rgba(22, 35, 63, 0.14);
+  --invite-bg: #b8a9c9;
 
-  --display: 'Fraunces', serif;
-  --body: 'Newsreader', serif;
+  --signature: 'Better Together Script', 'Segoe Script', cursive;
+  --guest-name: 'Amsterdam Four', 'Times New Roman', serif;
+  --body: 'Cormorant Garamond', serif;
+  --date: 'Montserrat', sans-serif;
+  --body-italic: 'Cormorant Garamond', serif;
 }
 
 * {
@@ -28,6 +50,7 @@ body {
   html {
     scroll-behavior: auto;
   }
+
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
@@ -103,15 +126,16 @@ a:focus-visible {
 .names {
   position: relative;
   z-index: 1;
-  font-family: var(--display);
-  font-weight: 500;
-  font-size: clamp(40px, 9vw, 76px);
+  font-family: var(--signature);
+  font-weight: 400;
+  font-size: clamp(52px, 10vw, 92px);
   line-height: 1.05;
   margin: 0;
   color: var(--ink);
 }
 
 .names em {
+  font-family: var(--signature);
   font-style: italic;
   font-weight: 400;
   color: var(--gold);
@@ -122,7 +146,10 @@ a:focus-visible {
   position: relative;
   z-index: 1;
   margin-top: 24px;
+  font-family: var(--date);
   font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
   color: var(--charcoal);
 }
 
@@ -130,7 +157,10 @@ a:focus-visible {
   position: relative;
   z-index: 1;
   margin-top: 4px;
+  font-family: var(--date);
   font-size: 16px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
   color: var(--sage);
 }
 
@@ -191,8 +221,9 @@ section {
 }
 
 .detail-title {
-  font-family: var(--display);
-  font-size: 22px;
+  font-family: var(--body);
+  font-size: 24px;
+  font-weight: 600;
   margin: 0 0 6px;
   color: var(--ink);
 }
@@ -200,10 +231,12 @@ section {
 .detail-meta {
   margin: 0;
   color: var(--charcoal);
-  font-size: 16px;
+  font-family: var(--body-italic);
+  font-size: 18px;
+  font-style: italic;
 }
 
-.detail-meta + .detail-meta {
+.detail-meta+.detail-meta {
   margin-top: 2px;
 }
 
@@ -370,7 +403,7 @@ footer {
   flex-wrap: wrap;
 }
 
-.admin-stats > div {
+.admin-stats>div {
   display: flex;
   flex-direction: column;
 }
@@ -759,6 +792,7 @@ footer {
   .gallery-photo {
     transition: none;
   }
+
   .gallery-photo:hover {
     transform: none;
   }
@@ -770,7 +804,7 @@ footer {
   position: fixed;
   inset: 0;
   z-index: 20;
-  background: #0A0E19;
+  background: var(--invite-bg);
 }
 
 .video-invite__video {
@@ -779,7 +813,7 @@ footer {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #0A0E19;
+  background: var(--invite-bg);
 }
 
 .video-invite__poster {
@@ -791,7 +825,7 @@ footer {
   justify-content: center;
   text-align: center;
   padding: 24px;
-  background: #0A0E19;
+  background: var(--invite-bg);
 }
 
 .video-invite__poster .eyebrow {
@@ -894,6 +928,7 @@ footer {
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: none;
@@ -1096,7 +1131,7 @@ footer {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #0A0E19;
+  background: var(--invite-bg);
   cursor: pointer;
   perspective: 800px;
   user-select: none;
@@ -1129,6 +1164,7 @@ footer {
   0% {
     transform: rotateX(0deg);
   }
+
   100% {
     transform: rotateX(-180deg);
   }
@@ -1152,7 +1188,7 @@ footer {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #0A0E19;
+  background: var(--invite-bg);
   transform: translateY(100%);
   opacity: 0;
   pointer-events: none;
@@ -1172,9 +1208,11 @@ footer {
     transform: translateY(100%);
     opacity: 0;
   }
+
   30% {
     opacity: 1;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -1325,20 +1363,19 @@ footer {
   0% {
     background-position: -200% center;
   }
+
   100% {
     background-position: 200% center;
   }
 }
 
 .gold-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--ink) 0%,
-    var(--ink) 40%,
-    var(--gold) 50%,
-    var(--ink) 60%,
-    var(--ink) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--ink) 0%,
+      var(--ink) 40%,
+      var(--gold) 50%,
+      var(--ink) 60%,
+      var(--ink) 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -1357,9 +1394,12 @@ footer {
 /* ---------- Video poster breathing glow ---------- */
 
 @keyframes play-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(184, 169, 201, 0.15);
   }
+
   50% {
     box-shadow: 0 0 24px 4px rgba(177, 133, 76, 0.25);
   }
@@ -1382,6 +1422,7 @@ footer {
     opacity: 0;
     transform: translateY(16px);
   }
+
   to {
     opacity: 1;
     transform: none;
@@ -1409,6 +1450,7 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .hero .eyebrow,
   .hero .names,
   .hero .hero-date,

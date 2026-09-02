@@ -261,7 +261,7 @@ export default function VideoInvite({ guest, locale }: { guest: Guest; locale: L
               textAnchor="middle"
               fill="#16233f"
               fontSize="32"
-              fontFamily="'Cormorant Garamond'"
+              fontFamily="'Le Bistrot des Amoureux'"
               fontWeight="400"
             >
               {nameLines.map((line, index) => (
