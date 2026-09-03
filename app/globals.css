@@ -364,7 +364,7 @@ footer {
 /* ---------- Admin ---------- */
 
 .admin-wrap {
-  max-width: 880px;
+  /* max-width: 880px; */
   margin: 0 auto;
   padding: 48px 24px 96px;
 }
